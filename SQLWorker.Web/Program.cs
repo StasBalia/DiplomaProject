@@ -19,6 +19,8 @@ namespace SQLWorker.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()                
+                .UseUrls("http://*:5050")
                 .UseStartup<Startup>();
     }
 }
