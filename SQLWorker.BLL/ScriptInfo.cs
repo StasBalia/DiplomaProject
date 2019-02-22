@@ -6,7 +6,7 @@ namespace SQLWorker.BLL
     {
         public string Name { get; set; }
         public string Path { get; set; }
-        public string VCS { get; set; }
+        public string Provider { get; set; }
         public List<string> Parameters { get; set; }
     }
 }
