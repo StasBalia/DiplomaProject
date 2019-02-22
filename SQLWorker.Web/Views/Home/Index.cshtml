@@ -7,21 +7,78 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<div id = "someId"></div>
+<div class="alert alert-success navbar-fixed-top" id="success-alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Success!</strong>  Скрипт был успешно отправлен на обработку. По факту выполнения будет выгружен файл.
+</div>
+
+<div id="launchModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="launchScriptTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p>Параметры запуска скрипта</p>
+
+                <div class="form-group">
+                    <label for="formatSelect">Выберите формат выгрузки</label>
+                    <select class="form-control" id="formatSelect">
+                        <option>XLS</option>
+                        <option>DBF</option>
+                        <option>CSV</option>
+                        <option>TABLE</option>
+                        <option>XML</option>
+                        <option>JSON</option>
+                    </select>
+                </div>
+
+                <div id="scriptParams">
+
+                </div>
+                <input type="text" hidden id="scriptPath" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="callLaunch()">Launch</button>
+                <button type="button" class="btn btn-warning" onclick="openScr()">Script</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id = "fileTree"></div>
 
 
 <script>
     $(document).ready(function () {
 
-        $('#someId').fileTree(
+        $('#fileTree').fileTree(
             {
                 root: 'Scripts/',
                 script: 'Home/GetFileTree',
                 multiFolder: true
             },
             function (file) {
+                console.log(file);
                 var split = file.split('/');
-                console.log(split);
+                $('#launchScriptTitle').text(split[split.length - 1]);
+                $('#launchModal').modal('show');
+                $('#scriptParams').empty();
+                $('#scriptPath').text(file);
+                $.ajax({
+                    url: '/Script/GetParams?path=' + file,
+                    type: 'GET',
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            $('#scriptParams').append('<div class="form-group"><label for="parameter:' + data[i] + '">' + data[i] + '</label><input type="text" class="form-control" id="parameter:' + data[i] + '"></div>');
+                        }
+                    }
+                });
+                
             });
     });
 </script>

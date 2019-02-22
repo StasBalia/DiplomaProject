@@ -23,8 +23,8 @@ namespace SQLWorker.UnitTests.BLL
                 .WriteTo.Console().CreateLogger();
             ILoggerFactory factory = new LoggerFactory();
             factory.AddSerilog(dispose: true);
-            _repository = new PostgreSqlScriptRepository(Log.Logger, DB_CONNECTION_STRING);
-            _scriptWorker = new ScriptWorker(Log.Logger, _repository);
+            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING); //TODO: pls setup logger here 
+            _scriptWorker = new ScriptWorker(_repository); // and here
         }
 
         [Fact]

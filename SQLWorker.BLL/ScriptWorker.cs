@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.BLL
@@ -19,9 +20,14 @@ namespace SQLWorker.BLL
             _repository = repository;
         }
 
+        public ScriptWorker(IScriptRepository repository)
+        {
+            _repository = repository;
+        }
+
         public async Task ExecuteScript(LaunchInfo launchInfo)
         {
-            _log.Information("Start executing script.");
+            //_log.LogInformation("Start executing script.");
 
             var scriptFile = File.ReadAllLines(launchInfo.PathToDirectory);
 
@@ -34,13 +40,13 @@ namespace SQLWorker.BLL
             var result = await Task.FromResult(_repository.ExecuteAndGetResult(script));
             if (result == null)
             {
-                _log.Error("Не отримали dataSet");
+                _log.LogError("Не отримали dataSet");
                 return;
             }
 
             if (result.Tables.Count == 0)
             {
-                _log.Error("Немає таблиць в dataSet");
+                _log.LogError("Немає таблиць в dataSet");
                 return;
             }
                 
@@ -51,8 +57,11 @@ namespace SQLWorker.BLL
             {
                 sb.Append(string.Join(",", row.ItemArray) + "\n");
             }
-            
-            _log.Information("ok");
+        }
+
+        public List<string> GetParams(string src)
+        {
+            return new List<string>();
         }
     }
 }

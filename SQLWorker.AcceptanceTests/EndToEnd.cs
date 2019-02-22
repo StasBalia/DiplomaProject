@@ -105,5 +105,17 @@ namespace SQLWorker.AcceptanceTests
             response.IsSuccessStatusCode.Should().Be(true);
             response.Should().NotBeNull();
         }
+
+
+        [Fact]
+        public async Task GetParams_ReturnOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    @"/Script/GetParams?src=E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\testScript.sql");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
     }
 }

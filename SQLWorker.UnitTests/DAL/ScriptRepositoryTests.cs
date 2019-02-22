@@ -17,7 +17,7 @@ namespace SQLWorker.UnitTests.DAL
                 .WriteTo.Console().CreateLogger();
             ILoggerFactory factory = new LoggerFactory();
             factory.AddSerilog(dispose: true);
-            _repository = new PostgreSqlScriptRepository(Log.Logger, DB_CONNECTION_STRING);
+            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING); //TODO: pls setup logger here
             //_scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>());
         }
 

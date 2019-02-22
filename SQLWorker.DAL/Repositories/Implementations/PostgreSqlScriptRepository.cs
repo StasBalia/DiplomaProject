@@ -1,19 +1,26 @@
 using System;
 using System.Data;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Npgsql;
-using Serilog;
 using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.DAL.Repositories.Implementations
 {
     public class PostgreSqlScriptRepository : IScriptRepository
     {
-        private readonly ILogger _log;
+        private readonly ILogger<PostgreSqlScriptRepository> _log;
         private readonly string _connectionString;
         
-        public PostgreSqlScriptRepository(ILogger log, string connectionString)
+        public PostgreSqlScriptRepository(ILogger<PostgreSqlScriptRepository> log, IOptions<DatabaseSettings> dbSettings) //TODO: make test constructor pls
         {
             _log = log;
+            _connectionString = dbSettings.Value.ProdDatabase;
+        }
+
+        public PostgreSqlScriptRepository(string connectionString)
+        {
             _connectionString = connectionString;
         }
         public DataSet ExecuteAndGetResult(string script)
@@ -31,7 +38,7 @@ namespace SQLWorker.DAL.Repositories.Implementations
             }
             catch (Exception e)
             {
-                _log.Error("Exception while executing script {e}:",e);
+                _log.LogError("Exception while executing script {e}:",e);
                 return null;
             }
         }

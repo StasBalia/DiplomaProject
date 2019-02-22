@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
+using SQLWorker.DAL;
+using SQLWorker.DAL.Repositories.Implementations;
+using SQLWorker.DAL.Repositories.Interfaces;
+using SQLWorker.Web.Models;
 
 namespace SQLWorker.Web
 {
@@ -35,8 +39,11 @@ namespace SQLWorker.Web
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.Configure<DatabaseSettings>(options => Configuration.GetSection("DatabaseSettings").Bind(options));
             services.AddLogging(x => x.AddSerilog(dispose: true));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddTransient<IScriptRepository, PostgreSqlScriptRepository>(); //TODO: pass connstr to implementation
+            services.AddSingleton(_ => Configuration);
             //var t = Configuration.GetValue<string>("ProdDatabase");
         }
 
