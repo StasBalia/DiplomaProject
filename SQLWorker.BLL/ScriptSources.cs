@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace SQLWorker.BLL
 {
-    public class ScriptSources
+    public static class ScriptSources
     {
-        private static ConcurrentBag<ScriptInfo> _scripts = new ConcurrentBag<ScriptInfo>();
-        public static IEnumerable<ScriptInfo> GetAll() => _scripts.ToList();
+        private static readonly ConcurrentBag<ScriptInfo> Scripts = new ConcurrentBag<ScriptInfo>();
+        public static IEnumerable<ScriptInfo> GetAll() => Scripts.ToList();
 
-        public static void Add(ScriptInfo scriptInfo) => _scripts.Add(scriptInfo);
+        public static void Add(ScriptInfo scriptInfo) => Scripts.Add(scriptInfo);
 
-        public static void RemoveAll() => _scripts.Clear();
+        public static void RemoveAll() => Scripts.Clear();
 
         public static void AddRange(List<ScriptInfo> list)
         {
             foreach (var scriptInfo in list)
-                _scripts.Add(scriptInfo);
+                Scripts.Add(scriptInfo);
         }
     }
 }
