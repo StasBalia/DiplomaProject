@@ -21,6 +21,7 @@ namespace SQLWorker.UnitTests.BLL
         {
             await _loader.LoadScriptsAsync(@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\");//TODO: remove explicit path !!!!
             ScriptSources.GetAll().Count().Should().Be(1);
+            ScriptSources.RemoveAll();
         }
 
         [Fact]

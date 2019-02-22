@@ -28,7 +28,6 @@ namespace SQLWorker.Web.Controllers
         [HttpGet]
         public async Task<List<string>> GetParams([FromQuery] string path)
         {
-            int i = 0;
             return await Task.Run(() => _scriptWorker.GetParams(path));
         }
     }

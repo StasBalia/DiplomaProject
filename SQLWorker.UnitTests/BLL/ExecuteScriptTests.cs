@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Serilog;
+using Microsoft.Extensions.Logging.Console;
 using SQLWorker.BLL;
 using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
@@ -19,12 +19,12 @@ namespace SQLWorker.UnitTests.BLL
 
         public ExecuteScriptTests()
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console().CreateLogger();
+
             ILoggerFactory factory = new LoggerFactory();
-            factory.AddSerilog(dispose: true);
-            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING); //TODO: pls setup logger here 
-            _scriptWorker = new ScriptWorker(_repository); // and here
+            ILogger<PostgreSqlScriptRepository> log = factory.CreateLogger<PostgreSqlScriptRepository>();
+            
+            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING, log); 
+            _scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>(), _repository);
         }
 
         [Fact]
@@ -32,12 +32,12 @@ namespace SQLWorker.UnitTests.BLL
         {
             await _scriptWorker.ExecuteScript(new LaunchInfo
             {
-                PathToDirectory = @"E:\University\Diploma\DiplomaProject\Scripts\github\testScript.sql",
+                PathToScriptFile = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
                 {
                     new ParamInfo
                     {
-                        Name = "_id",
+                        Name = "{id}",
                         Value = "1"
                     }
                 },

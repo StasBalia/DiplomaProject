@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Moq;
 using Serilog;
 using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
@@ -13,11 +14,8 @@ namespace SQLWorker.UnitTests.DAL
             "User ID=postgres;Password=password;Server=localhost;Port=5432;Database=test";
         public ScriptRepositoryTests()
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console().CreateLogger();
             ILoggerFactory factory = new LoggerFactory();
-            factory.AddSerilog(dispose: true);
-            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING); //TODO: pls setup logger here
+            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING, factory.CreateLogger<PostgreSqlScriptRepository>());
             //_scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>());
         }
 

@@ -8,9 +8,27 @@ using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.DAL.Repositories.Implementations
 {
+    public class ILoggerAdapter<T> : ILogger<T>
+    {
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            Serilog.Log.Information(formatter(state, exception));
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class PostgreSqlScriptRepository : IScriptRepository
     {
-        private readonly ILogger<PostgreSqlScriptRepository> _log;
+        private readonly ILogger _log;
         private readonly string _connectionString;
         
         public PostgreSqlScriptRepository(ILogger<PostgreSqlScriptRepository> log, IOptions<DatabaseSettings> dbSettings) //TODO: make test constructor pls
@@ -19,8 +37,9 @@ namespace SQLWorker.DAL.Repositories.Implementations
             _connectionString = dbSettings.Value.ProdDatabase;
         }
 
-        public PostgreSqlScriptRepository(string connectionString)
+        public PostgreSqlScriptRepository(string connectionString, ILogger<PostgreSqlScriptRepository> log)
         {
+            _log = log;
             _connectionString = connectionString;
         }
         public DataSet ExecuteAndGetResult(string script)

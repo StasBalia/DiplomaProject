@@ -49,5 +49,20 @@ namespace SQLWorker.UnitTests.BLL
                 ScriptSources.GetAll().Count().Should().Be(expectedCount);
                 ScriptSources.RemoveAll();
         }
+
+        [Fact]
+        public void GetScriptByFilePath_ReturnsFile()
+        {
+            var expected = new ScriptInfo
+            {
+                Path = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql"
+            };
+            ScriptSources.Add(expected);
+            var filePath = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql";
+
+            ScriptInfo result = ScriptSources.GetSingleScriptByFilePath(filePath);
+            ScriptSources.RemoveAll();
+            result.Should().BeEquivalentTo(expected);
+        }
     }
 }

@@ -20,16 +20,12 @@ namespace SQLWorker.BLL
             _repository = repository;
         }
 
-        public ScriptWorker(IScriptRepository repository)
-        {
-            _repository = repository;
-        }
 
         public async Task ExecuteScript(LaunchInfo launchInfo)
         {
             //_log.LogInformation("Start executing script.");
 
-            var scriptFile = File.ReadAllLines(launchInfo.PathToDirectory);
+            var scriptFile = File.ReadAllLines(launchInfo.PathToScriptFile);
 
             string script = string.Join("", scriptFile);
             foreach (var paramInfo in launchInfo.ParamInfos)

@@ -26,5 +26,10 @@ namespace SQLWorker.BLL
             foreach (var scriptInfo in list)
                 Scripts.Add(scriptInfo);
         }
+
+        public static ScriptInfo GetSingleScriptByFilePath(string filePath)
+        {
+            return GetAll().FirstOrDefault(x => x.Path.Equals(filePath));
+        }
     }
 }
