@@ -5,6 +5,6 @@ namespace SQLWorker.DAL.Repositories.Interfaces
 {
     public interface IScriptRepository
     {
-        object ExecuteAndGetResult(string script);
+        DataSet ExecuteAndGetResult(string script);
     }
 }

@@ -3,34 +3,41 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SQLWorker.BLL;
+using SQLWorker.DAL.Repositories.Implementations;
+using SQLWorker.DAL.Repositories.Interfaces;
 using Xunit;
 
 namespace SQLWorker.Tests.UnitTests.BLL
 {
-    public class ExecuteScript
+    public class ExecuteScriptTests
     {
-        private ScriptWorker _scriptWorker;
+        private readonly ScriptWorker _scriptWorker;
+        private readonly IScriptRepository _repository;
 
-        public ExecuteScript()
+        private const string DB_CONNECTION_STRING =
+            "User ID=postgres;Password=password;Server=localhost;Port=5432;Database=test";
+
+        public ExecuteScriptTests()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console().CreateLogger();
             ILoggerFactory factory = new LoggerFactory();
             factory.AddSerilog(dispose: true);
-            _scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>());
+            _repository = new PostgreSqlScriptRepository(Log.Logger, DB_CONNECTION_STRING);
+            _scriptWorker = new ScriptWorker(Log.Logger, _repository);
         }
 
         [Fact]
         public async Task AlwaysValidTest()
         {
-            var result = await _scriptWorker.ExecuteScript(new LaunchInfo
+            await _scriptWorker.ExecuteScript(new LaunchInfo
             {
                 PathToDirectory = @"E:\University\Diploma\DiplomaProject\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
                 {
                     new ParamInfo
                     {
-                        Name = "id",
+                        Name = "_id",
                         Value = "1"
                     }
                 },

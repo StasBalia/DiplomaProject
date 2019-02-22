@@ -1,7 +1,7 @@
+using System;
 using System.Data;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Npgsql;
+using Serilog;
 using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.DAL.Repositories.Implementations
@@ -16,12 +16,23 @@ namespace SQLWorker.DAL.Repositories.Implementations
             _log = log;
             _connectionString = connectionString;
         }
-        public object ExecuteAndGetResult(string script)
+        public DataSet ExecuteAndGetResult(string script)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            try
             {
-                var command = new NpgsqlCommand(script);
-                return command.ExecuteScalarAsync();
+                using (var connection = new NpgsqlConnection(_connectionString))
+                {
+                    var command = new NpgsqlCommand(script, connection);
+                    var npgsqlDataAdapter = new NpgsqlDataAdapter(command);
+                    var ds = new DataSet();
+                    npgsqlDataAdapter.Fill(ds);
+                    return ds;
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Error("Exception while executing script {e}:",e);
+                return null;
             }
         }
     }
