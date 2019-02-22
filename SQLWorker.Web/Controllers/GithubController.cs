@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SQLWorker.Web.Models.Request;
+using SQLWorker.Web.Models.Request.Github;
 
 namespace SQLWorker.Web.Controllers
 {

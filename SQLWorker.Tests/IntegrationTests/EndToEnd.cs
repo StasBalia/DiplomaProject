@@ -7,7 +7,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SQLWorker.Web;
 using SQLWorker.Web.Controllers;
-using SQLWorker.Web.Models.Request;
+using SQLWorker.Web.Models.Request.Github;
+using SQLWorker.Web.Models.Request.Script;
 using Xunit;
 
 namespace SQLWorker.Tests.IntegrationTests
@@ -62,6 +63,31 @@ namespace SQLWorker.Tests.IntegrationTests
                 }
             };
             var response = await client.PostAsJsonAsync("/Github/Payload", p);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
+        
+        [Fact]
+        public async Task ScriptLaunchPingTest_ReturnTrue()
+        {
+            var client = _factory.CreateClient();
+
+            var launch = new LaunchInfo
+            {
+                PathToDirectory = @"E:\",
+                Parameters = new List<ParamInfo>
+                {
+                    new ParamInfo
+                    {
+                        Name = "_id",
+                        Value = "1"
+                    }
+                },
+                FileType = "csv"
+            };
+
+            var response = await client.PostAsJsonAsync("/Script/Launch", launch);
             
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);

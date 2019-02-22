@@ -37,7 +37,7 @@ namespace SQLWorker.Web
             });
             services.AddLogging(x => x.AddSerilog(dispose: true));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+            //var t = Configuration.GetValue<string>("ProdDatabase");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
