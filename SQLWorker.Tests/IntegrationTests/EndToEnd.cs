@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SQLWorker.Web;
 using SQLWorker.Web.Controllers;
+using SQLWorker.Web.Models.Request;
 using Xunit;
 
 namespace SQLWorker.Tests.IntegrationTests
@@ -54,7 +56,8 @@ namespace SQLWorker.Tests.IntegrationTests
                         Distinct = true,
                         Message = "message",
                         SHA = "sha",
-                        Url = "urlik"
+                        Url = "urlik",
+                        TimeStamp = DateTime.Now.ToUniversalTime()
                     }
                 }
             };
