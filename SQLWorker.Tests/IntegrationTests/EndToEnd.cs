@@ -69,7 +69,7 @@ namespace SQLWorker.Tests.IntegrationTests
         }
         
         [Fact]
-        public async Task ScriptLaunchPingTest_ReturnTrue()
+        public async Task ScriptLaunchPingTest_ReturnOk()
         {
             var client = _factory.CreateClient();
 
@@ -91,6 +91,20 @@ namespace SQLWorker.Tests.IntegrationTests
             
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task GetFileTree_ReturnOk()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.PostAsync("/Home/GetFileTree", new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("dir", @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\")
+            }));
+            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+            response.Should().NotBeNull();
         }
     }
 }

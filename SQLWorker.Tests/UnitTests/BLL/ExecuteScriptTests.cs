@@ -32,7 +32,7 @@ namespace SQLWorker.Tests.UnitTests.BLL
         {
             await _scriptWorker.ExecuteScript(new LaunchInfo
             {
-                PathToDirectory = @"E:\University\Diploma\DiplomaProject\github\testScript.sql",
+                PathToDirectory = @"E:\University\Diploma\DiplomaProject\Scripts\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
                 {
                     new ParamInfo

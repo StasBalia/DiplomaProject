@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <Folder Include="Models\Request\Github" />
+      <Folder Include="wwwroot\connectors" />
     </ItemGroup>
 
 </Project>
