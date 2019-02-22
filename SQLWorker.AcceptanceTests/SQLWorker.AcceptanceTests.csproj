@@ -20,9 +20,4 @@
       <ProjectReference Include="..\SQLWorker.Web\SQLWorker.Web.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="IntegrationTests" />
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-
 </Project>

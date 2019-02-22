@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SQLWorker.Web;
-using SQLWorker.Web.Controllers;
 using SQLWorker.Web.Models.Request.Github;
 using SQLWorker.Web.Models.Request.Script;
 using Xunit;
 
-namespace SQLWorker.Tests.IntegrationTests
+namespace SQLWorker.AcceptanceTests
 {
     public class EndToEnd : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private WebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<Startup> _factory;
         
         public EndToEnd(WebApplicationFactory<Startup> factory)
         {

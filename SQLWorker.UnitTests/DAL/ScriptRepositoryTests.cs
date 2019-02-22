@@ -4,7 +4,7 @@ using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
 using Xunit;
 
-namespace SQLWorker.Tests.UnitTests.DAL
+namespace SQLWorker.UnitTests.DAL
 {
     public class ScriptRepositoryTests
     {
