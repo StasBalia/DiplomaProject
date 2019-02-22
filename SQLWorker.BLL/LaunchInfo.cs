@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 
-namespace SQLWorker.Web.Models.Request.Script
+namespace SQLWorker.BLL
 {
     public class LaunchInfo
     {
         public string PathToDirectory { get; set; }
-        public List<ParamInfo> Parameters { get; set; }
+
+        public List<ParamInfo> ParamInfos { get; set; }
         public string FileType { get; set; }
     }
 }

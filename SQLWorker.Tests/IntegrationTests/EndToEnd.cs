@@ -73,12 +73,12 @@ namespace SQLWorker.Tests.IntegrationTests
         {
             var client = _factory.CreateClient();
 
-            var launch = new LaunchInfo
+            var launch = new LaunchInfoDTO
             {
                 PathToDirectory = @"E:\",
-                Parameters = new List<ParamInfo>
+                Parameters = new List<ParamInfoDTO>
                 {
-                    new ParamInfo
+                    new ParamInfoDTO
                     {
                         Name = "_id",
                         Value = "1"

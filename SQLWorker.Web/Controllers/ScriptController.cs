@@ -14,7 +14,7 @@ namespace SQLWorker.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Launch([FromBody]LaunchInfo request)
+        public IActionResult Launch([FromBody]LaunchInfoDTO request)
         {
             return Ok();
         }
