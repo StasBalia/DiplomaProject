@@ -65,9 +65,8 @@ namespace SQLWorker.UnitTests.BLL
         }
 
         [Fact]
-        public void ConvertToCsv_ReturnCorrectString()
+        public async Task ConvertResultAndSaveToFile_AlwaysValid()
         {
-            IScriptSaver<string> saver = new CsvSaver();
             DataSet ds = new DataSet
             {
                 Tables =
@@ -102,26 +101,10 @@ namespace SQLWorker.UnitTests.BLL
             dr3.ItemArray = new object[] {5, 6};
             table.Rows.Add(dr3);
 
-            string result = saver.ConvertToRightFormat(ds);
-            result.Should().NotBeNullOrEmpty();
-
-            string expected = "colName,col1Name\n1,2\n3,4\n5,6\n";
-            result.Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public async Task SaveCsv() //TODO: refactor this with using LaunchInfoClass pls!
-        {
-            string csv = "colName,col1Name\n1,2\n3,4\n5,6\n";
-            IScriptSaver<string> saver = new CsvSaver();
             string pathToSave = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results"; //TODO: remove path!!!
-            string fileName = $"fileScript_{DateTime.Now.Day}.{DateTime.Now.Month}.{DateTime.Now.Year}_{new Random().Next(1, 999999).ToString().PadLeft(6, '0')}.csv";
-            
-            await saver.SaveAsync(csv, pathToSave, fileName);
-
-            string fullPath = Path.Combine(pathToSave, fileName);
-            bool isExist = File.Exists(fullPath);
-            isExist.Should().BeTrue();
+            string fileName = Utilities.GenerateFileNameForResult("fileScript") + ".csv";
+            FileExtension fileExtension = FileExtension.csv;
+            await _scriptWorker.ConvertResultAndSaveToFile(ds, pathToSave, fileName, fileExtension);
         }
     }
 }

@@ -54,5 +54,21 @@ namespace SQLWorker.BLL
         {
             return new List<string>();
         }
+
+        public async Task ConvertResultAndSaveToFile(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension)
+        {
+            switch (fileExtension)
+            {
+                   case FileExtension.csv:
+                        var converter = new CsvConverter();
+                        var convertedResult = converter.ConvertToRightFormat(ds);
+                        var saver = new CsvSaver();
+                        await saver.SaveAsync(convertedResult, pathToSave, fileName);
+                        break;
+                   default:
+                        return;
+                    
+            }
+        }
     }
 }

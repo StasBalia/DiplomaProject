@@ -5,7 +5,11 @@ namespace SQLWorker.BLL
 {
     public interface IScriptSaver<T>
     {
-        T ConvertToRightFormat(DataSet result);
         Task SaveAsync(T objectToSave, string pathToSave, string fileName);
+    }
+
+    public interface IScriptConverter<T>
+    {
+        T ConvertToRightFormat(DataSet result);
     }
 }
