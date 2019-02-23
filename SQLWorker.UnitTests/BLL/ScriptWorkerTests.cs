@@ -110,7 +110,7 @@ namespace SQLWorker.UnitTests.BLL
         }
 
         [Fact]
-        public async Task SaveCsv()
+        public async Task SaveCsv() //TODO: refactor this with using LaunchInfoClass pls!
         {
             string csv = "colName,col1Name\n1,2\n3,4\n5,6\n";
             IScriptSaver<string> saver = new CsvSaver();
