@@ -21,7 +21,7 @@ namespace SQLWorker.BLL
         }
 
 
-        public async Task ExecuteScript(LaunchInfo launchInfo)
+        public async Task<DataSet> ExecuteScript(LaunchInfo launchInfo)
         {
             //_log.LogInformation("Start executing script.");
 
@@ -33,19 +33,28 @@ namespace SQLWorker.BLL
                 script = script.Replace(paramInfo.Name, paramInfo.Value);
             }
             
-            var result = await Task.FromResult(_repository.ExecuteAndGetResult(script));
+            return await Task.FromResult(_repository.ExecuteAndGetResult(script));
+        }
+
+        public bool CheckForSucces(DataSet result)
+        {
             if (result == null)
             {
                 _log.LogError("Не отримали dataSet");
-                return;
+                return false;
             }
 
             if (result.Tables.Count == 0)
             {
                 _log.LogError("Немає таблиць в dataSet");
-                return;
+                return false;
             }
-                
+
+            return true;
+        }
+
+        public string ConvertToCsv(DataSet result)
+        {       
             DataTable table = result.Tables[0];          
             StringBuilder sb = new StringBuilder();
             sb.Append(string.Join(",", result.Tables[0].Columns.Cast<DataColumn>().Select(x => x.ColumnName)) + "\n");
@@ -53,7 +62,11 @@ namespace SQLWorker.BLL
             {
                 sb.Append(string.Join(",", row.ItemArray) + "\n");
             }
+
+            return sb.ToString();
         }
+        
+        
 
         public List<string> GetParams(string src)
         {

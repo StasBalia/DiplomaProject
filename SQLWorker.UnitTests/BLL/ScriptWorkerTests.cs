@@ -1,0 +1,113 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using SQLWorker.BLL;
+using SQLWorker.DAL.Repositories.Implementations;
+using SQLWorker.DAL.Repositories.Interfaces;
+using Xunit;
+
+namespace SQLWorker.UnitTests.BLL
+{
+    public class ExecuteScriptTests
+    {
+        private readonly ScriptWorker _scriptWorker;
+        private readonly IScriptRepository _repository;
+
+        private const string DB_CONNECTION_STRING =
+            "User ID=postgres;Password=password;Server=localhost;Port=5432;Database=test";
+
+        public ExecuteScriptTests()
+        {
+
+            ILoggerFactory factory = new LoggerFactory();
+            ILogger<PostgreSqlScriptRepository> log = factory.CreateLogger<PostgreSqlScriptRepository>();
+            
+            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING, log); 
+            _scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>(), _repository);
+        }
+
+        [Fact]
+        public async Task AlwaysValidTest()
+        {
+            await _scriptWorker.ExecuteScript(new LaunchInfo
+            {
+                PathToScriptFile = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
+                ParamInfos = new List<ParamInfo>
+                {
+                    new ParamInfo
+                    {
+                        Name = "{id}",
+                        Value = "1"
+                    }
+                },
+                FileType = "csv"
+            });
+        }
+
+        public static IEnumerable<object[]> DataSets =>
+            new[]
+            {
+                new object[] {null, false},
+                new object[] {new DataSet(), false},
+                new object[] {new DataSet {Tables = {new DataTable()}}, true}
+            };
+
+        [Theory, MemberData(nameof(DataSets))]
+        public void ChecForSuccess_ReturnsCorrectValue(DataSet ds, bool expectedResult)
+        {
+            bool result = _scriptWorker.CheckForSucces(ds);
+            result.Should().Be(expectedResult);
+        }
+
+        [Fact]
+        public void ConvertToCsv_ReturnCorrectString()
+        {
+            DataSet ds = new DataSet
+            {
+                Tables =
+                {
+                    new DataTable
+                    {
+                        Columns =
+                        {
+                            new DataColumn
+                            {
+                                ColumnName = "colName",
+                                DataType = typeof(int)
+                            },
+                            new DataColumn
+                            {
+                                ColumnName = "col1Name",
+                                DataType = typeof(int)
+                            }
+                        }
+                        
+                    }
+                }
+            };
+            var table = ds.Tables[0];
+            var dr = table.NewRow();
+            dr.ItemArray = new object[] {1, 2};
+            table.Rows.Add(dr);
+            var dr2 = table.NewRow();
+            dr2.ItemArray = new object[] {3, 4};
+            table.Rows.Add(dr2);
+            var dr3 = table.NewRow();
+            dr3.ItemArray = new object[] {5, 6};
+            table.Rows.Add(dr3);
+
+            string result = _scriptWorker.ConvertToCsv(ds);
+            result.Should().NotBeNullOrEmpty();
+
+            string expected = "colName,col1Name\n1,2\n3,4\n5,6\n";
+            result.Should().BeEquivalentTo(expected);
+        }
+        
+        
+        
+    }
+}
