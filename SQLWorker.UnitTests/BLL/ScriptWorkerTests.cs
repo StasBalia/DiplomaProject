@@ -34,7 +34,7 @@ namespace SQLWorker.UnitTests.BLL
         [Fact]
         public async Task AlwaysValidTest()
         {
-            await _scriptWorker.ExecuteScript(new LaunchInfo
+            await _scriptWorker.ExecuteScriptAsync(new LaunchInfo
             {
                 PathToScriptFile = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
@@ -102,9 +102,9 @@ namespace SQLWorker.UnitTests.BLL
             table.Rows.Add(dr3);
 
             string pathToSave = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results"; //TODO: remove path!!!
-            string fileName = Utilities.GenerateFileNameForResult("fileScript") + ".csv";
+            string fileName = Utilities.GenerateFileNameForResult("fileScript");
             FileExtension fileExtension = FileExtension.csv;
-            await _scriptWorker.ConvertResultAndSaveToFile(ds, pathToSave, fileName, fileExtension);
+            await _scriptWorker.ConvertResultAndSaveToFileAsync(ds, pathToSave, fileName, fileExtension);
         }
     }
 }

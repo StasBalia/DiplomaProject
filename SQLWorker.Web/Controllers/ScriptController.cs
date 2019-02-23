@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SQLWorker.BLL;
 using SQLWorker.DAL.Repositories.Interfaces;
 using SQLWorker.Web.Models.Request.Script;
@@ -20,9 +22,37 @@ namespace SQLWorker.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Launch([FromBody]LaunchInfoDTO request)
+        public async Task<IActionResult> Launch([FromBody]LaunchInfoDTO request)
         {
-            return Ok();
+            //TODO: заюзай якийсь автомапер.
+            
+            LaunchInfo launchInfo = new LaunchInfo
+            {
+                FileType = request.FileType,
+                PathToScriptFile = request.PathToDirectory
+            };
+            launchInfo.ParamInfos = new List<ParamInfo>();
+            foreach (var parameter in request.Parameters)
+            {
+                launchInfo.ParamInfos.Add(new ParamInfo
+                {
+                    Name = parameter.Name,
+                    Value = parameter.Value
+                });
+            }
+
+            var scriptResult = await _scriptWorker.ExecuteScriptAsync(launchInfo);
+            var script = ScriptSources.GetSingleScriptByFilePath(request.PathToDirectory);
+            string fileName = Utilities.GenerateFileNameForResult(script.Name) + request.FileType.ToLower();
+            string resultPath = $"{script.Provider}_Results";
+            await _scriptWorker.ConvertResultAndSaveToFileAsync(scriptResult, resultPath, fileName,
+                Utilities.GetFileExtension(request.FileType.ToLower()));
+            return new JsonResult(JsonConvert.SerializeObject(new
+            {
+                SavedPath = Path.Combine(resultPath,fileName),
+                FileName = fileName,
+                request.FileType
+            }));
         }
 
         [HttpGet]

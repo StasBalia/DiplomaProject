@@ -13,5 +13,13 @@ namespace SQLWorker.UnitTests.BLL
             string res = Utilities.GenerateFileNameForResult(scriptName);
             res.Should().NotBeNullOrEmpty();
         }
+
+        [Fact]
+        public void CheckIfFileExtensionExistInEnum_ReturnTrue()
+        {
+            string fileExtension = "csv";
+            FileExtension res = Utilities.GetFileExtension(fileExtension);
+            res.Should().Be(FileExtension.csv);
+        }
     }
 }

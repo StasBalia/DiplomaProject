@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using SQLWorker.BLL;
 using SQLWorker.Web;
 using SQLWorker.Web.Models.Request.Github;
 using SQLWorker.Web.Models.Request.Script;
@@ -71,18 +72,17 @@ namespace SQLWorker.AcceptanceTests
         public async Task ScriptLaunchPingTest_ReturnOk()
         {
             var client = _factory.CreateClient();
-
+            ScriptSources.Add(new ScriptInfo
+            {
+                Name = "testScript.sql",
+                Parameters = new List<string>(),
+                Path = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
+                Provider = "github"
+            });
             var launch = new LaunchInfoDTO
             {
-                PathToDirectory = @"E:\",
-                Parameters = new List<ParamInfoDTO>
-                {
-                    new ParamInfoDTO
-                    {
-                        Name = "_id",
-                        Value = "1"
-                    }
-                },
+                PathToDirectory = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
+                Parameters = new List<ParamInfoDTO>(),
                 FileType = "csv"
             };
 
@@ -90,6 +90,7 @@ namespace SQLWorker.AcceptanceTests
             
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
+            ScriptSources.RemoveAll();
         }
 
         [Fact]
@@ -116,6 +117,13 @@ namespace SQLWorker.AcceptanceTests
                     @"/Script/GetParams?src=E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\testScript.sql");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
+        }
+
+        [Fact]
+        public void Test()
+        {
+            var t = Environment.CurrentDirectory;
+            int i = 0;
         }
     }
 }

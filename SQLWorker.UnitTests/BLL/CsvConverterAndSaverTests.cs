@@ -61,7 +61,7 @@ namespace SQLWorker.UnitTests.BLL
             string csv = "colName,col1Name\n1,2\n3,4\n5,6\n";
             IScriptSaver<string> saver = new CsvSaver();
             string pathToSave = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results"; //TODO: remove path!!!
-            string fileName = Utilities.GenerateFileNameForResult("fileScript.sql") + ".csv";
+            string fileName = Utilities.GenerateFileNameForResult("fileScript.sql") + "csv";
             
             await saver.SaveAsync(csv, pathToSave, fileName);
 

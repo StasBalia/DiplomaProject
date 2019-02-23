@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -21,19 +22,26 @@ namespace SQLWorker.BLL
         }
 
 
-        public async Task<DataSet> ExecuteScript(LaunchInfo launchInfo)
+        public async Task<DataSet> ExecuteScriptAsync(LaunchInfo launchInfo)
         {
             //_log.LogInformation("Start executing script.");
-
-            var scriptFile = File.ReadAllLines(launchInfo.PathToScriptFile);
-
-            string script = string.Join("", scriptFile);
-            foreach (var paramInfo in launchInfo.ParamInfos)
+            try
             {
-                script = script.Replace(paramInfo.Name, paramInfo.Value);
-            }
+                var scriptFile = File.ReadAllLines(launchInfo.PathToScriptFile);
+
+                string script = string.Join("", scriptFile);
+                foreach (var paramInfo in launchInfo.ParamInfos)
+                {
+                    script = script.Replace(paramInfo.Name, paramInfo.Value);
+                }
             
-            return await Task.FromResult(_repository.ExecuteAndGetResult(script));
+                return await Task.FromResult(_repository.ExecuteAndGetResult(script));
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e.Message,e);
+                return new DataSet();
+            }
         }
 
         public bool CheckForSucces(DataSet result)
@@ -55,7 +63,7 @@ namespace SQLWorker.BLL
             return new List<string>();
         }
 
-        public async Task ConvertResultAndSaveToFile(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension)
+        public async Task ConvertResultAndSaveToFileAsync(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension)
         {
             switch (fileExtension)
             {
