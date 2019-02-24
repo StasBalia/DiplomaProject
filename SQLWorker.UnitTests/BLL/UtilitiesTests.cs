@@ -1,3 +1,4 @@
+using System.IO;
 using FluentAssertions;
 using SQLWorker.BLL;
 using Xunit;
@@ -17,6 +18,7 @@ namespace SQLWorker.UnitTests.BLL
         [Fact]
         public void CheckIfFileExtensionExistInEnum_ReturnTrue()
         {
+            var t = new DirectoryInfo("Scripts/github").FullName;
             string fileExtension = "csv";
             FileExtension res = Utilities.GetFileExtension(fileExtension);
             res.Should().Be(FileExtension.csv);

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
+using SQLWorker.BLL;
 using SQLWorker.DAL;
 using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
@@ -50,6 +51,8 @@ namespace SQLWorker.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            ScriptLoader s = new ScriptLoader();
+            Task.Run(() => s.LoadScriptsAsync("Scripts/"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

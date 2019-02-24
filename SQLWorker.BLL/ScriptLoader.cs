@@ -22,7 +22,7 @@ namespace SQLWorker.BLL
                 {
                     Name = file.Name,
                     Path = file.FullName,
-                    Provider = DetermineProvider(path),
+                    Provider = DetermineProvider(file.FullName),
                     Parameters = Regex.Matches(fileContent, "{.+?}").Select(match => match.Value)
                         .Distinct().ToList()
                 });

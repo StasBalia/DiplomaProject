@@ -76,12 +76,12 @@ namespace SQLWorker.AcceptanceTests
             {
                 Name = "testScript.sql",
                 Parameters = new List<string>(),
-                Path = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
+                Path = @"Scripts\github\testScript.sql",
                 Provider = "github"
             });
             var launch = new LaunchInfoDTO
             {
-                PathToDirectory = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
+                PathToDirectory = @"Scripts\github\testScript.sql",
                 Parameters = new List<ParamInfoDTO>(),
                 FileType = "csv"
             };
