@@ -1,8 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using SQLWorker.BLL.Models;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.ScriptUtilities
 {
     public static class ScriptSources
     {

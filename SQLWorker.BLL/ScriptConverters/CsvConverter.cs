@@ -1,8 +1,9 @@
 using System.Data;
 using System.Linq;
 using System.Text;
+using SQLWorker.BLL.Models.Interfaces;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.ScriptConverters
 {
     public class CsvConverter : IScriptConverter<string>
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.Models
 {
     public class LaunchInfo
     {

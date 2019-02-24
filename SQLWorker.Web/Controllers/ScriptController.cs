@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SQLWorker.BLL;
+using SQLWorker.BLL.Models;
+using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Interfaces;
 using SQLWorker.Web.Models.Request.Script;
 

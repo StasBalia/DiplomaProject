@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using SQLWorker.BLL.Models;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.ScriptUtilities
 {
     public class ScriptLoader
     {

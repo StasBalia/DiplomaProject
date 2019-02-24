@@ -1,6 +1,8 @@
 using System.IO;
 using FluentAssertions;
 using SQLWorker.BLL;
+using SQLWorker.BLL.Models.Enums;
+using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
 namespace SQLWorker.UnitTests.BLL

@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
+using SQLWorker.BLL.Models.Enums;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.ScriptUtilities
 {
     public class Utilities
     {

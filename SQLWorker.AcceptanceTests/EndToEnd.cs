@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SQLWorker.BLL;
+using SQLWorker.BLL.Models;
+using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.Web;
 using SQLWorker.Web.Models.Request.Github;
 using SQLWorker.Web.Models.Request.Script;

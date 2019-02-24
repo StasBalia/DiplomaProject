@@ -1,12 +1,10 @@
 using System;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SQLWorker.BLL.Models.Interfaces;
 
-namespace SQLWorker.BLL
+namespace SQLWorker.BLL.ScriptSavers
 {
     public class CsvSaver : IScriptSaver<string>
     {

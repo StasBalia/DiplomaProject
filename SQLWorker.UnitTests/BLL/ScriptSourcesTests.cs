@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using SQLWorker.BLL;
+using SQLWorker.BLL.Models;
+using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
 namespace SQLWorker.UnitTests.BLL

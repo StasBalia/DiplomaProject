@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using SQLWorker.BLL;
+using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
 namespace SQLWorker.UnitTests.BLL
