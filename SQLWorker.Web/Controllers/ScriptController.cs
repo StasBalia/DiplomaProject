@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -61,6 +62,14 @@ namespace SQLWorker.Web.Controllers
         public async Task<List<string>> GetParams([FromQuery] string path)
         {
             return await Task.Run(() => _scriptWorker.GetParams(path));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Source([FromQuery] string src)
+        {
+            return await Task.Run(() => View("Source", System.IO.File.ReadAllText(
+                ScriptSources.GetSingleScriptByFilePath(new DirectoryInfo(src).FullName).Path,
+                Encoding.Default)));
         }
     }
 }

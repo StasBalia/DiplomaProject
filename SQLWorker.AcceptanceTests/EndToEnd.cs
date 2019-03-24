@@ -122,6 +122,17 @@ namespace SQLWorker.AcceptanceTests
         }
 
         [Fact]
+        public async Task Source_CorrectPath_ReturnsOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    @"Script/Source?src=E:\University\Diploma\DiplomaProject\SQLWorker.AcceptanceTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript.sql");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
+
+        [Fact]
         public void Test()
         {
             var t = Environment.CurrentDirectory;

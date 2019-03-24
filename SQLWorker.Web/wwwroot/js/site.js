@@ -14,7 +14,6 @@ $(document).ready(function() {
         },
         function(file) {
             console.log(file);
-            $('#scriptPath').text(file);
             var split = file.split('/');
             $('#launchScriptTitle').text(split[split.length - 1]);
             $('#launchModal').modal('show');
@@ -59,4 +58,8 @@ function callLaunch() {
             //+ '&filename=' + response.FileName + '&type=' + response.Type);
         }
     });
+}
+
+function openSource() {
+    window.open('/Script/Source?src=' + $('#scriptPath').text());
 }
