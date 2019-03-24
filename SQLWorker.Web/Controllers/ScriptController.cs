@@ -4,9 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using SQLWorker.BLL;
 using SQLWorker.BLL.Models;
+using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Interfaces;
 using SQLWorker.Web.Models.Request.Script;
@@ -17,7 +19,6 @@ namespace SQLWorker.Web.Controllers
     {
         private readonly ILogger<ScriptController> _log;
         private readonly ScriptWorker _scriptWorker;
-        
         public ScriptController(ILogger<ScriptController> log, IScriptRepository repository)
         {
             _log = log;
@@ -70,6 +71,33 @@ namespace SQLWorker.Web.Controllers
             return await Task.Run(() => View("Source", System.IO.File.ReadAllText(
                 ScriptSources.GetSingleScriptByFilePath(new DirectoryInfo(src).FullName).Path,
                 Encoding.Default)));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Download([FromQuery] DownloadInfoDTO data)
+        {
+            return await ConvertResultToActionResultAsync(data, Utilities.GetFileExtension(data.FileType));
+        }
+
+
+        public async Task<IActionResult> ConvertResultToActionResultAsync(DownloadInfoDTO data, FileExtension fileExtension)
+        {
+            if(string.IsNullOrEmpty(data.SavedPath))
+                return new EmptyResult();
+            switch (fileExtension)
+            {
+                case FileExtension.csv:
+                {
+                    var content = new FileStream(data.SavedPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    return File(content, "application/octet-stream", data.FileName);
+                }
+                case FileExtension.xml:
+                {
+                    return Content(await System.IO.File.ReadAllTextAsync(data.SavedPath),
+                        MediaTypeHeaderValue.Parse("application/xml"));
+                }
+                default: return new EmptyResult();
+            }
         }
     }
 }

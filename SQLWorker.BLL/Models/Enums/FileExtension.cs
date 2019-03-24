@@ -2,6 +2,8 @@ namespace SQLWorker.BLL.Models.Enums
 {
     public enum FileExtension
     {
-        csv
+        csv,
+        table,
+        xml
     }
 }

@@ -52,10 +52,9 @@ function callLaunch() {
         data: jsonData,
         dataType: "json",
         success: function(data) {
-            alert(data);
-            //var response = JSON.parse(data);
-            //window.open('/Launch/Download?fileGuid=' + response.FileGuid
-            //+ '&filename=' + response.FileName + '&type=' + response.Type);
+            var response = JSON.parse(data);
+            window.open('/Script/Download?savedPath=' + response.SavedPath
+            + '&fileName=' + response.FileName + '&fileType=' + response.FileType);
         }
     });
 }

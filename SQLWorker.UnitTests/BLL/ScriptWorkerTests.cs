@@ -35,7 +35,7 @@ namespace SQLWorker.UnitTests.BLL
         }
 
         [Fact]
-        public async Task AlwaysValidTest()
+        public async Task AlwaysValidTest() //TODO: мабуть треба тут доробити, а то Assert'a немає
         {
             await _scriptWorker.ExecuteScriptAsync(new LaunchInfo
             {
@@ -108,6 +108,14 @@ namespace SQLWorker.UnitTests.BLL
             string fileName = Utilities.GenerateFileNameForResult("fileScript");
             FileExtension fileExtension = FileExtension.csv;
             await _scriptWorker.ConvertResultAndSaveToFileAsync(ds, pathToSave, fileName, fileExtension);
+        }
+
+
+        [Theory]
+        [InlineData(FileExtension.csv, typeof(FileStream))]
+        public async Task ScriptWorker_CorrectFileExtension_ReturnCorrectResult(FileExtension fileExtension, Type returnType)
+        {
+            //var result = await _scriptWorker.ConvertResultToActionResult(new DownloadInfo(), fileExtension);
         }
     }
 }

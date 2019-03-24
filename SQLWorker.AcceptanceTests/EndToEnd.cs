@@ -127,7 +127,18 @@ namespace SQLWorker.AcceptanceTests
             var client = _factory.CreateClient();
             var response =
                 await client.GetAsync(
-                    @"Script/Source?src=E:\University\Diploma\DiplomaProject\SQLWorker.AcceptanceTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript.sql");
+                    @"Script/Source?src=Scripts\github\testScript.sql");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task DownloadCorrectInfoForDownload_ReturnsOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    @"Script/Download?fileType=csv&fileName=testScript.sql_24.2.2019_042565&savedPath=Results\github_Results\testScript.sql_24.2.2019_042565.csv");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
         }
