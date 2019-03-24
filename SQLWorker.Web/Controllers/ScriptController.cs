@@ -29,14 +29,14 @@ namespace SQLWorker.Web.Controllers
         public async Task<IActionResult> Launch([FromBody]LaunchInfoDTO request)
         {
             //TODO: заюзай якийсь автомапер.
-            
+            List<ParamInfoDTO> parameters = JsonConvert.DeserializeObject<List<ParamInfoDTO>>(request.Parameters);
             LaunchInfo launchInfo = new LaunchInfo
             {
                 FileType = request.FileType,
                 PathToScriptFile = request.PathToDirectory
             };
             launchInfo.ParamInfos = new List<ParamInfo>();
-            foreach (var parameter in request.Parameters)
+            foreach (var parameter in parameters)
             {
                 launchInfo.ParamInfos.Add(new ParamInfo
                 {
@@ -62,7 +62,11 @@ namespace SQLWorker.Web.Controllers
         [HttpGet]
         public async Task<List<string>> GetParams([FromQuery] string path)
         {
-            return await Task.Run(() => _scriptWorker.GetParams(path));
+            return await Task.Run(() =>
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                return _scriptWorker.GetParams(directoryInfo.FullName);
+            });
         }
 
         [HttpGet]

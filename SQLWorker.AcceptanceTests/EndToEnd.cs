@@ -84,7 +84,7 @@ namespace SQLWorker.AcceptanceTests
             var launch = new LaunchInfoDTO
             {
                 PathToDirectory = @"Scripts\github\testScript.sql",
-                Parameters = new List<ParamInfoDTO> {new ParamInfoDTO {Name = "{id}", Value = "1"}},
+                Parameters = "[{\"Name\":\"{id}\",\"Value\":\"2\"}]",
                 FileType = "csv"
             };
 

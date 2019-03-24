@@ -19,29 +19,39 @@ $(document).ready(function() {
             $('#launchModal').modal('show');
             $('#scriptParams').empty();
             $('#scriptPath').text(file);
-            //$.ajax({
-            //  url: '/Script/GetParams?path=' + file,
-            //    type: 'GET',
-            //    success: function (data) {
-            //          for (var i = 0; i < data.length; i++) {
-            //              $('#scriptParams').append('<div class="form-group"><label for="parameter:' + data[i] + '">' + data[i] + '</label><input type="text" class="form-control" id="parameter:' + data[i] + '"></div>');
-            //         }
-            //       }
-            //});
-
+            $.ajax({
+             url: '/Script/GetParams?path=' + file,
+               type: 'GET',
+               success: function (data) {
+                     for (var i = 0; i < data.length; i++) {
+                         $('#scriptParams').append('<div class="form-group"><label for="parameter:' + data[i] + '">' + data[i] + '</label><input type="text" class="form-control" id="parameter:' + data[i] + '"></div>');
+                    }
+                  }
+            });
         });
 });
 
 function callLaunch() {
+    var paramsArray = $('input[id^="parameter:"]');
+
+    var params = [];
+
+    for (var i = 0; i < paramsArray.length; i++) {
+        var obj = {};
+        obj["Name"] = paramsArray[i].id.replace('parameter:', '');
+        obj["Value"] = paramsArray[i].value;
+        params.push(obj);
+    }
+    
+    
     $('#launchModal').modal('hide');
     $("#success-alert").fadeTo(5000, 500).slideUp(500,
         function() {
             $("#success-alert").slideUp(500);
         });
+    console.log(JSON.stringify(params));
 
-
-    var data = {'path':$('#scriptPath').text(), 'params':[], 'ext':$('#formatSelect').val().toString()};
-    var params = JSON.stringify("");
+    var data = {'path':$('#scriptPath').text(), 'parameters':JSON.stringify(params), 'ext':$('#formatSelect').val().toString()};
     
     var jsonData = JSON.stringify(data);
     console.log(jsonData);

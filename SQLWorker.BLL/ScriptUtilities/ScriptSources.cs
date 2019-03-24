@@ -24,8 +24,12 @@ namespace SQLWorker.BLL.ScriptUtilities
 
         public static void AddRange(List<ScriptInfo> list)
         {
-            foreach (var scriptInfo in list)
-                Scripts.Add(scriptInfo);
+            lock (objLock)
+            {
+                foreach (var scriptInfo in list)
+                    Scripts.Add(scriptInfo);    
+            }
+            
         }
 
         public static ScriptInfo GetSingleScriptByFilePath(string filePath)

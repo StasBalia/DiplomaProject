@@ -9,8 +9,8 @@ namespace SQLWorker.Web.Models.Request.Script
         [JsonProperty("path")]
         public string PathToDirectory { get; set; }
         
-        [JsonProperty("params")]
-        public List<ParamInfoDTO> Parameters { get; set; }
+        [JsonProperty("parameters")]
+        public string Parameters { get; set; }
         [JsonProperty("ext")]
         public string FileType { get; set; }
     }
