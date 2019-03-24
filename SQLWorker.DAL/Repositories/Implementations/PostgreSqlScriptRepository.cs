@@ -8,24 +8,6 @@ using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.DAL.Repositories.Implementations
 {
-    public class ILoggerAdapter<T> : ILogger<T>
-    {
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            Serilog.Log.Information(formatter(state, exception));
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class PostgreSqlScriptRepository : IScriptRepository
     {
         private readonly ILogger _log;

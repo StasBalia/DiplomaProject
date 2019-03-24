@@ -4,12 +4,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 <div class="alert alert-success navbar-fixed-top" id="success-alert">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Success!</strong>  Скрипт был успешно отправлен на обработку. По факту выполнения будет выгружен файл.
+    <strong>Success!</strong>  Скріпт було успішно відправлено на обробку.
 </div>
 
 <div id="launchModal" class="modal fade" role="dialog">
@@ -21,17 +20,12 @@
                 <h4 class="modal-title" id="launchScriptTitle"></h4>
             </div>
             <div class="modal-body">
-                <p>Параметры запуска скрипта</p>
+               
 
                 <div class="form-group">
-                    <label for="formatSelect">Выберите формат выгрузки</label>
+                    <label for="formatSelect">Оберіть формат файлу для зберігання</label>
                     <select class="form-control" id="formatSelect">
-                        <option>XLS</option>
-                        <option>DBF</option>
                         <option>CSV</option>
-                        <option>TABLE</option>
-                        <option>XML</option>
-                        <option>JSON</option>
                     </select>
                 </div>
 
@@ -41,9 +35,9 @@
                 <input type="text" hidden id="scriptPath" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="callLaunch()">Launch</button>
-                <button type="button" class="btn btn-warning" onclick="openScr()">Script</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="callLaunch()">Запустити</button>
+                
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Закрити</button>
             </div>
         </div>
 
