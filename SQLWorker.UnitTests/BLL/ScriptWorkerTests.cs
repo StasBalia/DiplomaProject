@@ -20,6 +20,7 @@ namespace SQLWorker.UnitTests.BLL
     {
         private readonly ScriptWorker _scriptWorker;
         private readonly IScriptRepository _repository;
+        private readonly ScriptLoader _loader;
 
         private const string DB_CONNECTION_STRING =
             "User ID=postgres;Password=password;Server=localhost;Port=5432;Database=test";
@@ -29,7 +30,7 @@ namespace SQLWorker.UnitTests.BLL
 
             ILoggerFactory factory = new LoggerFactory();
             ILogger<PostgreSqlScriptRepository> log = factory.CreateLogger<PostgreSqlScriptRepository>();
-            
+            _loader = new ScriptLoader();
             _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING, log); 
             _scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>(), _repository);
         }
@@ -110,12 +111,16 @@ namespace SQLWorker.UnitTests.BLL
             await _scriptWorker.ConvertResultAndSaveToFileAsync(ds, pathToSave, fileName, fileExtension);
         }
 
-
         [Theory]
-        [InlineData(FileExtension.csv, typeof(FileStream))]
-        public async Task ScriptWorker_CorrectFileExtension_ReturnCorrectResult(FileExtension fileExtension, Type returnType)
+        [InlineData(@"E:\University\Diploma\DiplomaProject\SQLWorker.UnitTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript.sql", 0)]
+        [InlineData(@"E:\University\Diploma\DiplomaProject\SQLWorker.UnitTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript1.sql", 1)]
+        [InlineData(@"E:\University\Diploma\DiplomaProject\SQLWorker.UnitTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript2.sql", 2)]
+        public async Task GetParams_WithCorrectPath_ReturnsParameters(string path, int expectedParams)
         {
-            //var result = await _scriptWorker.ConvertResultToActionResult(new DownloadInfo(), fileExtension);
+            await _loader.LoadScriptsAsync(@"Scripts\github");
+            var scriptParams = _scriptWorker.GetParams(path);
+            scriptParams.Count.Should().Be(expectedParams);
+            ScriptSources.RemoveAll();
         }
     }
 }

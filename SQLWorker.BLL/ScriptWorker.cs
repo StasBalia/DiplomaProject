@@ -9,6 +9,7 @@ using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptConverters;
 using SQLWorker.BLL.ScriptSavers;
+using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Interfaces;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -64,7 +65,7 @@ namespace SQLWorker.BLL
 
         public List<string> GetParams(string src)
         {
-            return new List<string>();
+            return ScriptSources.GetSingleScriptByFilePath(src).Parameters;
         }
 
         public async Task ConvertResultAndSaveToFileAsync(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension)

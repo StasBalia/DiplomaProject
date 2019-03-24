@@ -77,14 +77,14 @@ namespace SQLWorker.AcceptanceTests
             ScriptSources.Add(new ScriptInfo
             {
                 Name = "testScript.sql",
-                Parameters = new List<string>(),
+                Parameters = new List<string> {"{id}"},
                 Path = @"Scripts\github\testScript.sql",
                 Provider = "github"
             });
             var launch = new LaunchInfoDTO
             {
                 PathToDirectory = @"Scripts\github\testScript.sql",
-                Parameters = new List<ParamInfoDTO>(),
+                Parameters = new List<ParamInfoDTO> {new ParamInfoDTO {Name = "{id}", Value = "1"}},
                 FileType = "csv"
             };
 
@@ -116,7 +116,7 @@ namespace SQLWorker.AcceptanceTests
             var client = _factory.CreateClient();
             var response =
                 await client.GetAsync(
-                    @"/Script/GetParams?src=E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\testScript.sql");
+                    @"/Script/GetParams?path=E:\University\Diploma\DiplomaProject\SQLWorker.AcceptanceTests\bin\Debug\netcoreapp2.2\Scripts\github\testScript.sql");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
         }

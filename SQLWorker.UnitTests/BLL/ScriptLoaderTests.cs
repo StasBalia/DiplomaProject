@@ -10,7 +10,7 @@ namespace SQLWorker.UnitTests.BLL
 {
     public class ScriptLoaderTests
     {
-        private ScriptLoader _loader;
+        private readonly ScriptLoader _loader;
 
         public ScriptLoaderTests()
         {
