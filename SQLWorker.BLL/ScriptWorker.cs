@@ -96,6 +96,7 @@ namespace SQLWorker.BLL
                        var xlsConvertedResult = xlsxConverter.ConvertToRightFormat(ds);
                        var xlsSaver = new XlsSaver();
                        await xlsSaver.SaveAsync(xlsConvertedResult, pathToSave, fileName);
+                       xlsConvertedResult.Dispose();
                        break;
                    case FileExtension.json:
                        var jsonConverter = new JsonConverter();

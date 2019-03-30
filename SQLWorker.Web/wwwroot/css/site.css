@@ -54,3 +54,30 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+table {
+  table-layout:fixed;
+  margin:auto;
+}
+th, td {
+  padding:5px 10px;
+  word-wrap:break-word;
+}
+thead {
+  display:table;
+  width:99%;
+  height:3vh;
+}
+tbody {
+  height:31.6vh;
+  overflow:auto;
+  overflow-x:hidden;
+  display:block;
+  width:100%;
+}
+tbody tr {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}

@@ -29,6 +29,7 @@ $(document).ready(function() {
                   }
             });
         });
+    setInterval(updateScriptInfo, 5000);
 });
 
 function callLaunch() {
@@ -71,4 +72,39 @@ function callLaunch() {
 
 function openSource() {
     window.open('/Script/Source?src=' + $('#scriptPath').text());
+}
+
+
+function updateScriptInfo() {
+    $.ajax({
+        url: '/Script/GetTasksForUser',
+        type: 'GET',
+        success: function (data) {
+            var str = "";
+            for (var i = 0; i < data.length; i++) {
+                str += '<tr align="center">';
+                str += '<td style="width:45%"><a href ="Script/GetScriptInfo?guid=' + data[i].id + '" target="_blank">' + data[i].scriptSource.name + '</td>';
+                str += '<td style="width:15%;font-size:10px;">' + data[i].resultFileExtension + '</td>';
+                str += '<td style="width:40%;">';
+                console.log("Task state = " + data[i].taskState);
+                switch (data[i].taskState) {
+                    case "Queued":
+                        str += '<i class="fa fa-hand-paper"></i>';
+                        break;
+                    case "Started":
+                        str += '<i class="fa fa-spinner fa-pulse"></i>';
+                        break;
+                    case "Error":
+                        str += '<i class="fa fa-times"></i>';
+                        break;
+                    case "Success":
+                        str += '<a href="Script/Download?savedPath=' + data[i].downloadPath + data[i].downloadName + '&fileName=' + data[i].downloadName + '&fileType=' + data[i].resultFileExtension +'" target="_blank"><i class="fa fa-download"></i></a>';
+                        break;
+                }
+                str += '</td>';
+                str += '</tr>';
+            }
+            document.getElementById("partBody").innerHTML = str;
+        }
+    });
 }

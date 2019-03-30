@@ -138,9 +138,20 @@ namespace SQLWorker.AcceptanceTests
             var client = _factory.CreateClient();
             var response =
                 await client.GetAsync(
-                    @"Script/Download?fileType=csv&fileName=testScript.sql_24.2.2019_042565&savedPath=Results\github_Results\testScript.sql_24.2.2019_042565.csv");
+                    @"Script/Download?fileType=csv&fileName=testScript.sql_24.2.2019_042565.csv&savedPath=Results\github_Results\testScript.sql_24.2.2019_042565.csv");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
-        } 
+        }
+
+        [Fact]
+        public async Task GetTasksForUser_ReturnsOk() //TODO: It works for all requests now. In future, I will edit it for concrete user.
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    @"Script/GetTasksForUser");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
     }
 }

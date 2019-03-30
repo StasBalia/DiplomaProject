@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using SQLWorker.BLL;
@@ -31,9 +32,8 @@ namespace SQLWorker.UnitTests.BLL
             };
 
             var taskId = model.Id;
-            TaskHandler s = new TaskHandler();
-            s.AddTask(model);
-            var task = s[taskId];
+            TaskHandler.AddTask(model);
+            var task = TaskHandler.GetAllTasks().FirstOrDefault(x => x.Id.Equals(taskId));
             task.Should().BeEquivalentTo(model);
         }
     }

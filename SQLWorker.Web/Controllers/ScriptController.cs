@@ -14,6 +14,7 @@ using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Interfaces;
 using SQLWorker.Web.Models.Request.Script;
+using SQLWorker.Web.Models.Response;
 
 namespace SQLWorker.Web.Controllers
 {
@@ -21,7 +22,6 @@ namespace SQLWorker.Web.Controllers
     {
         private readonly ILogger<ScriptController> _log;
         private readonly ScriptWorker _scriptWorker;
-        private TaskHandler _taskHandler = new TaskHandler();
         public ScriptController(ILogger<ScriptController> log, IScriptRepository repository)
         {
             _log = log;
@@ -59,7 +59,7 @@ namespace SQLWorker.Web.Controllers
                 ScriptParameters = launchInfo.ParamInfos?.Select(x => x.Value).ToArray(),
                 ResultFileExtension = fileExtension
             };
-            _taskHandler.AddTask(taskModel);
+            TaskHandler.AddTask(taskModel);
             
             taskModel.TaskState = TaskState.Started;
             
@@ -108,6 +108,34 @@ namespace SQLWorker.Web.Controllers
         public async Task<IActionResult> Download([FromQuery] DownloadInfoDTO data)
         {
             return await ConvertResultToActionResultAsync(data, Utilities.GetFileExtension(data.FileType));
+        }
+
+        [HttpGet]
+        public async Task<List<TaskViewModel>> GetTasksForUser() //TODO: In future, pls do validation for user.
+        {
+            return await Task.Run(() =>
+            {
+                var allTasks = TaskHandler.GetAllTasks();
+                List<TaskViewModel> taskViewModels = new List<TaskViewModel>();
+                foreach (var task in allTasks)
+                {
+                    taskViewModels.Add(new TaskViewModel //TODO: use automapper
+                    {
+                        Id = task.Id,
+                        User = task.User,
+                        Errors = task.Errors,
+                        EndTime = task.EndTime,
+                        StartTime = task.StartTime,
+                        TaskState = task.TaskState.ToString(),
+                        DownloadName = task.DownloadName,
+                        DownloadPath = task.DownloadPath,
+                        ScriptParameters = task.ScriptParameters,
+                        ResultFileExtension = task.ResultFileExtension.ToString(),
+                        ScriptSource = task.ScriptSource
+                    });
+                }
+                return taskViewModels;
+            }); 
         }
 
 
