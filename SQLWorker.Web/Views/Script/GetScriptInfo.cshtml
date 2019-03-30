@@ -1,0 +1,40 @@
+@model SQLWorker.BLL.Models.TaskModel
+
+<div class="container">
+    <div class="form-group">
+        <label asp-for="User">Користувач який запустив скрипт</label>
+        <input class="form-control" readonly type="text" asp-for="User" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ResultFileExtension">Формат вивантаження</label>
+        <input class="form-control" readonly asp-for="ResultFileExtension" />
+    </div>
+
+    <div class="form-group">
+        <label name="params">Параметри скрипту</label>
+        <input class="form-control" readonly name="params" value="@string.Join(',', Model.ScriptSource?.Parameters?.ToArray() ?? new string[] {""})" />
+    </div>
+
+    <div class="form-group">
+        <label name="params">Значення параметрів</label>
+        <input class="form-control" readonly name="params" value="@string.Join(',', Model.ScriptParameters?.ToArray() ?? new string[] {""})" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TaskState">Стан вивантаження</label>
+        <input class="form-control" readonly asp-for="TaskState">
+    </div>
+    <div class="form-group">
+        <label asp-for="Errors">Помилки (якщо були)</label>
+        <textarea class="form-control" rows="5" readonly asp-for="Errors"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="StartTime">Час початку виконання скрипту</label>
+        <input class="form-control" readonly asp-for="StartTime">
+        <label asp-for="EndTime">Час завершення виконання скрипту</label>
+        <input class="form-control" readonly asp-for="EndTime">
+        <label>Отработано за (с):</label>
+        <input class="form-control" value="@Model.TimeInSeconds.TotalSeconds" readonly />
+    </div>
+
+</div>

@@ -138,6 +138,12 @@ namespace SQLWorker.Web.Controllers
             }); 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetScriptInfo([FromQuery] Guid guid)
+        {
+            return await Task.Run(() => View(TaskHandler.GetAllTasks().FirstOrDefault(x => x.Id.Equals(guid))));
+        }
+
 
         public async Task<IActionResult> ConvertResultToActionResultAsync(DownloadInfoDTO data, FileExtension fileExtension)
         {

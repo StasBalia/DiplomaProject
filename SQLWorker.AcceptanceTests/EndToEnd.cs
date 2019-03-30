@@ -153,5 +153,23 @@ namespace SQLWorker.AcceptanceTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
         }
+
+        [Fact]
+        public async Task GetScriptInfo_ReturnsOk()
+        {
+            TaskModel model = new TaskModel
+            {
+                Id = Guid.NewGuid()
+            };
+            TaskHandler.AddTask(model);
+            
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    $@"Script/GetScriptInfo?guid={model.Id}");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
+        
     }
 }
