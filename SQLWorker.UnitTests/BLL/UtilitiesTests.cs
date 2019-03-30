@@ -22,6 +22,7 @@ namespace SQLWorker.UnitTests.BLL
         [InlineData("csv", FileExtension.csv)]
         [InlineData("asd", default(FileExtension))]
         [InlineData("xml", FileExtension.xml)]
+        [InlineData("json", FileExtension.json)]
         public void CheckIfFileExtensionExistInEnum_ReturnTrue(string extension, FileExtension convertedExt)
         {
             FileExtension res = Utilities.GetFileExtension(extension);

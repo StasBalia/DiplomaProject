@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 using FluentAssertions;
 using SQLWorker.BLL.Models.Interfaces;
 using SQLWorker.BLL.ScriptConverters;
@@ -11,7 +9,7 @@ using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
-namespace SQLWorker.UnitTests.BLL
+namespace SQLWorker.UnitTests.BLL.SaversAndConverters
 {
     public class XlsConverterAndSaverTests
     {
@@ -78,7 +76,7 @@ namespace SQLWorker.UnitTests.BLL
 
 
         [Fact]
-        public async Task SaveXls()
+        public async Task SaveXls_AlwaysValid()
         {
             IScriptSaver<XLWorkbook> saver = new XlsSaver();
             IScriptConverter<XLWorkbook> converter = new XlsConverter();

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Serilog;
 using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
@@ -12,6 +13,7 @@ using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Interfaces;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using JsonConverter = SQLWorker.BLL.ScriptConverters.JsonConverter;
 
 namespace SQLWorker.BLL
 {
@@ -89,6 +91,12 @@ namespace SQLWorker.BLL
                        var xlsConvertedResult = xlsxConverter.ConvertToRightFormat(ds);
                        var xlsSaver = new XlsSaver();
                        await xlsSaver.SaveAsync(xlsConvertedResult, pathToSave, fileName);
+                       break;
+                   case FileExtension.json:
+                       var jsonConverter = new JsonConverter();
+                       var jsonConvertedResult = jsonConverter.ConvertToRightFormat(ds);
+                       var jsonSaver = new JsonSaver();
+                       await jsonSaver.SaveAsync(jsonConvertedResult, pathToSave, fileName);
                        break;
                    default:
                         return;

@@ -27,6 +27,7 @@ namespace SQLWorker.UnitTests.Controller
         [InlineData("fileScript_30.3.2019_049548.csv", FileExtension.csv, typeof(FileStreamResult))]
         [InlineData("Test.xml", FileExtension.xml, typeof(ContentResult))]
         [InlineData("fileScript_30.3.2019_069278.xlsx", FileExtension.xlsx, typeof(FileStreamResult))]
+        [InlineData("fileScriptXml.sql_30.3.2019_469639.json", FileExtension.json, typeof(ContentResult))]
         public async Task ScriptWorker_CorrectFileExtension_ReturnCorrectResult(string fileName, FileExtension fileExtension,
             Type returnType)
         {

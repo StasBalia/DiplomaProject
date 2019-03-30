@@ -11,7 +11,7 @@ namespace SQLWorker.BLL.ScriptUtilities
 
         public static FileExtension GetFileExtension(string fileExtension)
         {
-            switch (fileExtension)
+            switch (fileExtension.ToLower())
             {
                 case "csv":
                     return FileExtension.csv;
@@ -19,6 +19,8 @@ namespace SQLWorker.BLL.ScriptUtilities
                     return FileExtension.xml;
                 case "xlsx":
                     return FileExtension.xlsx;
+                case "json":
+                    return FileExtension.json;
                 default:
                     return default(FileExtension);
             }

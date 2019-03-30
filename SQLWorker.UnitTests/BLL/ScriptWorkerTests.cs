@@ -281,5 +281,54 @@ namespace SQLWorker.UnitTests.BLL
             resultWorkbook.Dispose();
             expectedWorkbook.Dispose();
         }
+
+        [Fact]
+        public async Task ConvertToJsonAndSaveFile_AlwaysValid()
+        {
+            DataSet ds = new DataSet
+            {
+                Tables =
+                {
+                    new DataTable
+                    {
+                        Columns =
+                        {
+                            new DataColumn
+                            {
+                                ColumnName = "colName",
+                                DataType = typeof(int)
+                            },
+                            new DataColumn
+                            {
+                                ColumnName = "col1Name",
+                                DataType = typeof(int)
+                            }
+                        },
+                        TableName = "TableName"
+                    }
+                }
+            };
+            var table = ds.Tables[0];
+            var dr = table.NewRow();
+            dr.ItemArray = new object[] {1, 2};
+            table.Rows.Add(dr);
+            var dr2 = table.NewRow();
+            dr2.ItemArray = new object[] {3, 4};
+            table.Rows.Add(dr2);
+            var dr3 = table.NewRow();
+            dr3.ItemArray = new object[] {5, 6};
+            table.Rows.Add(dr3);
+
+            string pathToSave =
+                @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\"; //TODO: remove path!!!
+            string fileName = Utilities.GenerateFileNameForResult("fileScript") + "json";
+            FileExtension fileExtension = FileExtension.json;
+            
+            await _scriptWorker.ConvertResultAndSaveToFileAsync(ds, pathToSave, fileName, fileExtension);
+
+            string result = await File.ReadAllTextAsync(Path.Combine(pathToSave, fileName));
+            string expected = "{\"TableName\":[{\"colName\":1,\"col1Name\":2},{\"colName\":3,\"col1Name\":4},{\"colName\":5,\"col1Name\":6}]}";
+            result.Should().BeEquivalentTo(expected);
+        }
     }
 }

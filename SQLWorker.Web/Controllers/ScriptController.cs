@@ -101,6 +101,11 @@ namespace SQLWorker.Web.Controllers
                     return Content(await System.IO.File.ReadAllTextAsync(data.SavedPath),
                         MediaTypeHeaderValue.Parse("application/xml"));
                 }
+                case FileExtension.json:
+                {
+                    return Content(await System.IO.File.ReadAllTextAsync(data.SavedPath),
+                        MediaTypeHeaderValue.Parse("application/json"));
+                }
                 default: return new EmptyResult();
             }
         }

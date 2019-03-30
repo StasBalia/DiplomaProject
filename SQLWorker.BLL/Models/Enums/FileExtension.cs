@@ -5,6 +5,7 @@ namespace SQLWorker.BLL.Models.Enums
         csv,
         table,
         xml,
-        xlsx
+        xlsx,
+        json
     }
 }

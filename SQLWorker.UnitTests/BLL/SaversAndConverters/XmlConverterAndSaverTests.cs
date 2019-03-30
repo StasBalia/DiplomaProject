@@ -9,7 +9,7 @@ using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
-namespace SQLWorker.UnitTests.BLL
+namespace SQLWorker.UnitTests.BLL.SaversAndConverters
 {
     public class XmlConverterAndSaverTests
     {

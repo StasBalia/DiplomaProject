@@ -1,16 +1,14 @@
-using System;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using SQLWorker.BLL;
 using SQLWorker.BLL.Models.Interfaces;
 using SQLWorker.BLL.ScriptConverters;
 using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
-namespace SQLWorker.UnitTests.BLL
+namespace SQLWorker.UnitTests.BLL.SaversAndConverters
 {
     public class CsvConverterAndSaverTests
     {
