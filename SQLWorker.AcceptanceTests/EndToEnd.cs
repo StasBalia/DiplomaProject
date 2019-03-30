@@ -159,7 +159,8 @@ namespace SQLWorker.AcceptanceTests
         {
             TaskModel model = new TaskModel
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                User = ""
             };
             TaskHandler.AddTask(model);
             

@@ -12,9 +12,12 @@ namespace SQLWorker.BLL
         private const int MAX_COUNT_FOR_USER = 3;
         private const int MAX_TASKS_COUNT = 10;
 
-        private static readonly ConcurrentDictionary<Guid, TaskModel> _taskModels =
-            new ConcurrentDictionary<Guid, TaskModel>();
+        private static readonly ConcurrentDictionary<Guid, TaskModel> _taskModels;
 
+        static TaskHandler()
+        {
+            _taskModels = new ConcurrentDictionary<Guid, TaskModel>();
+        }
         public static int TasksCount => _taskModels.Count;
 
         public static void AddTask(TaskModel model)
