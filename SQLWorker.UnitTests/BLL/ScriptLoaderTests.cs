@@ -21,7 +21,7 @@ namespace SQLWorker.UnitTests.BLL
         public async Task LoadScriptFromFolder_ReturnOk()
         {
             await _loader.LoadScriptsAsync(@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\");//TODO: remove explicit path !!!!
-            ScriptSources.GetAll().Count().Should().Be(5);
+            ScriptSources.GetAll().Count().Should().Be(6);
             ScriptSources.RemoveAll();
         }
 
@@ -29,13 +29,16 @@ namespace SQLWorker.UnitTests.BLL
         public async Task GetFileFromGithubDirectory_ReturnOneFile()
         {
             var result = await _loader.GetFilesFromDirectoryAsync(@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\", "*.sql", SearchOption.AllDirectories);//TODO: remove explicit path !!!!
-            result.Length.Should().Be(5);
+            result.Length.Should().Be(6);
             ScriptSources.RemoveAll();
         }
 
         [Theory]
         [InlineData("Scripts/Github", "github")]
         [InlineData("Scripts/svn", "svn")]
+        [InlineData("Scripts/Svn", "svn")]
+        [InlineData("Scripts/github", "github")]
+        [InlineData("incorrect provider", "")]
         public void DetermineValueForProvider_ReturnCorrectProvider(string path, string expectedProvider)
         {
             string result = _loader.DetermineProvider(path);

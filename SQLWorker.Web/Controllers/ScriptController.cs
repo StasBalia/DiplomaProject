@@ -48,7 +48,7 @@ namespace SQLWorker.Web.Controllers
             var scriptResult = await _scriptWorker.ExecuteScriptAsync(launchInfo);
             var script = ScriptSources.GetSingleScriptByFilePath(new DirectoryInfo(request.PathToDirectory).FullName);
             string fileName = Utilities.GenerateFileNameForResult(script.Name) + request.FileType.ToLower();
-            string resultPath = $"Results\\{script.Provider}_Results";
+            string resultPath = $"Results\\{script.Provider}_Results\\";
             await _scriptWorker.ConvertResultAndSaveToFileAsync(scriptResult, resultPath, fileName,
                 Utilities.GetFileExtension(request.FileType.ToLower()));
             return new JsonResult(JsonConvert.SerializeObject(new
@@ -90,6 +90,7 @@ namespace SQLWorker.Web.Controllers
                 return new EmptyResult();
             switch (fileExtension)
             {
+                case FileExtension.xlsx:
                 case FileExtension.csv:
                 {
                     var content = new FileStream(data.SavedPath, FileMode.Open, FileAccess.Read, FileShare.Read);
