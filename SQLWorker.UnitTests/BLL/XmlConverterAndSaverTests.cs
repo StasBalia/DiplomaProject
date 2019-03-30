@@ -14,10 +14,9 @@ namespace SQLWorker.UnitTests.BLL
     public class XmlConverterAndSaverTests
     {
         [Fact]
-        public async Task ConvertToXml_ReturnCorrectXml()
+        public void ConvertToXml_ReturnCorrectXml()
         {
             IScriptConverter<string> converter = new XmlConverter();
-            IScriptSaver<string> saver = new XmlSaver();
             DataSet ds = new DataSet
             {
                 Tables =

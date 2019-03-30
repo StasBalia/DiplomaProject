@@ -15,6 +15,10 @@ namespace SQLWorker.BLL.ScriptUtilities
             {
                 case "csv":
                     return FileExtension.csv;
+                case "xml":
+                    return FileExtension.xml;
+                case "xlsx":
+                    return FileExtension.xlsx;
                 default:
                     return default(FileExtension);
             }

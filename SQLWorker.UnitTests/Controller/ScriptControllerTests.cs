@@ -29,9 +29,9 @@ namespace SQLWorker.UnitTests.Controller
         {
             var result = await _controller.ConvertResultToActionResultAsync(new DownloadInfoDTO
             {
-                FileName = "fileScript.sql_24.2.2019_332759",
+                FileName = "fileScript_30.3.2019_049548.csv",
                 FileType = "csv",
-                SavedPath = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\fileScript.sql_24.2.2019_332759.csv"
+                SavedPath = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\fileScript_30.3.2019_049548.csv"
             }, fileExtension);
             Type resultType = result.GetType();
             resultType.IsAssignableFrom(returnType).Should().BeTrue();

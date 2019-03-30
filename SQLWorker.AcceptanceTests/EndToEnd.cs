@@ -141,13 +141,6 @@ namespace SQLWorker.AcceptanceTests
                     @"Script/Download?fileType=csv&fileName=testScript.sql_24.2.2019_042565&savedPath=Results\github_Results\testScript.sql_24.2.2019_042565.csv");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
-        }
-
-        [Fact]
-        public void Test()
-        {
-            var t = Environment.CurrentDirectory;
-            int i = 0;
-        }
+        } 
     }
 }

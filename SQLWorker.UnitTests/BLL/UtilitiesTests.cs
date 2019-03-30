@@ -17,13 +17,15 @@ namespace SQLWorker.UnitTests.BLL
             res.Should().NotBeNullOrEmpty();
         }
 
-        [Fact]
-        public void CheckIfFileExtensionExistInEnum_ReturnTrue()
+        [Theory]
+        [InlineData("xlsx", FileExtension.xlsx)]
+        [InlineData("csv", FileExtension.csv)]
+        [InlineData("asd", default(FileExtension))]
+        [InlineData("xml", FileExtension.xml)]
+        public void CheckIfFileExtensionExistInEnum_ReturnTrue(string extension, FileExtension convertedExt)
         {
-            var t = new DirectoryInfo("Scripts/github").FullName;
-            string fileExtension = "csv";
-            FileExtension res = Utilities.GetFileExtension(fileExtension);
-            res.Should().Be(FileExtension.csv);
+            FileExtension res = Utilities.GetFileExtension(extension);
+            res.Should().Be(convertedExt);
         }
     }
 }

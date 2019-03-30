@@ -4,6 +4,7 @@ namespace SQLWorker.BLL.Models.Enums
     {
         csv,
         table,
-        xml
+        xml,
+        xlsx
     }
 }
