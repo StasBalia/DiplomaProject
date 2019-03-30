@@ -78,6 +78,12 @@ namespace SQLWorker.BLL
                         var saver = new CsvSaver();
                         await saver.SaveAsync(convertedResult, pathToSave, fileName);
                         break;
+                   case FileExtension.xml:
+                       var xmlConverter = new XmlConverter();
+                       var xmlConvertedResult = xmlConverter.ConvertToRightFormat(ds);
+                       var xmlSaver = new CsvSaver();
+                       await xmlSaver.SaveAsync(xmlConvertedResult, pathToSave, fileName);
+                       break;
                    default:
                         return;
                     

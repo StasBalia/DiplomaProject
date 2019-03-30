@@ -17,7 +17,7 @@ namespace SQLWorker.UnitTests.BLL
         [Fact]
         public void ConvertToCsv_ReturnCorrectString()
         {
-            IScriptConverter<string> saver = new CsvConverter();
+            IScriptConverter<string> converter = new CsvConverter();
             DataSet ds = new DataSet
             {
                 Tables =
@@ -52,7 +52,7 @@ namespace SQLWorker.UnitTests.BLL
             dr3.ItemArray = new object[] {5, 6};
             table.Rows.Add(dr3);
 
-            string result = saver.ConvertToRightFormat(ds);
+            string result = converter.ConvertToRightFormat(ds);
             result.Should().NotBeNullOrEmpty();
 
             string expected = "colName,col1Name\n1,2\n3,4\n5,6\n";
