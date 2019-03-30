@@ -1,3 +1,5 @@
+using System;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Serilog;
@@ -23,7 +25,11 @@ namespace SQLWorker.UnitTests.DAL
         public void ExecuteScript_Valid()
         {
             var res = _repository.ExecuteAndGetResult("SELECT * FROM public.usertable WHERE id = 1");
-            Assert.NotNull(res);
+
+            res.Start.Should().NotBe(default(DateTime));
+            res.End.Should().NotBe(default(DateTime));
+            res.Error.Should().BeEquivalentTo(default(string));
+            res.DataSet.Should().NotBeNull();
         }
     }
 }

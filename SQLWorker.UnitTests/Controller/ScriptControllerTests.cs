@@ -24,18 +24,20 @@ namespace SQLWorker.UnitTests.Controller
         }
 
         [Theory]
-        [InlineData("fileScript_30.3.2019_049548.csv", FileExtension.csv, typeof(FileStreamResult))]
-        [InlineData("Test.xml", FileExtension.xml, typeof(ContentResult))]
-        [InlineData("fileScript_30.3.2019_069278.xlsx", FileExtension.xlsx, typeof(FileStreamResult))]
-        [InlineData("fileScriptXml.sql_30.3.2019_469639.json", FileExtension.json, typeof(ContentResult))]
-        public async Task ScriptWorker_CorrectFileExtension_ReturnCorrectResult(string fileName, FileExtension fileExtension,
+        [InlineData("fileScript_30.3.2019_049548.csv", @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\", FileExtension.csv, typeof(FileStreamResult))]
+        [InlineData("Test.xml",@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\", FileExtension.xml, typeof(ContentResult))]
+        [InlineData("fileScript_30.3.2019_069278.xlsx", @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\", FileExtension.xlsx, typeof(FileStreamResult))]
+        [InlineData("fileScriptXml.sql_30.3.2019_469639.json", @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\", FileExtension.json, typeof(ContentResult))]
+        [InlineData("", "", FileExtension.json, typeof(EmptyResult))]
+        [InlineData("fileScriptXml.sql_30.3.2019_469639.json", "", (FileExtension)1, typeof(EmptyResult))]
+        public async Task ScriptWorker_CorrectFileExtension_ReturnCorrectResult(string fileName, string pathToSave, FileExtension fileExtension,
             Type returnType)
         {
             var result = await _controller.ConvertResultToActionResultAsync(new DownloadInfoDTO
             {
                 FileName = fileName,
                 FileType = fileExtension.ToString(),
-                SavedPath = $@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\{fileName}"
+                SavedPath = Path.Combine(pathToSave, fileName)
             }, fileExtension);
             Type resultType = result.GetType();
             resultType.IsAssignableFrom(returnType).Should().BeTrue();

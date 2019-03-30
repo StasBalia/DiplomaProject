@@ -39,9 +39,10 @@ namespace SQLWorker.UnitTests.BLL
         }
 
         [Fact]
-        public async Task AlwaysValidTest() //TODO: мабуть треба тут доробити, а то Assert'a немає
+        public async Task AlwaysValidTest()
         {
-            await _scriptWorker.ExecuteScriptAsync(new LaunchInfo
+            TaskModel task = new TaskModel();
+            var result = await _scriptWorker.ExecuteScriptAsync(new LaunchInfo
             {
                 PathToScriptFile = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
@@ -53,7 +54,11 @@ namespace SQLWorker.UnitTests.BLL
                     }
                 },
                 FileType = "csv"
-            });
+            }, task);
+            result.Should().NotBeNull();
+            task.StartTime.Should().NotBe(default(DateTime));
+            task.EndTime.Should().NotBe(default(DateTime));
+            task.Errors.Should().BeNullOrEmpty();
         }
 
         public static IEnumerable<object[]> DataSets =>

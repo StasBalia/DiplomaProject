@@ -11,6 +11,7 @@ using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptConverters;
 using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
+using SQLWorker.DAL.Models;
 using SQLWorker.DAL.Repositories.Interfaces;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using JsonConverter = SQLWorker.BLL.ScriptConverters.JsonConverter;
@@ -29,7 +30,7 @@ namespace SQLWorker.BLL
         }
 
 
-        public async Task<DataSet> ExecuteScriptAsync(LaunchInfo launchInfo)
+        public async Task<DataSet> ExecuteScriptAsync(LaunchInfo launchInfo, TaskModel taskModel)
         {
             //_log.LogInformation("Start executing script.");
             try
@@ -42,7 +43,11 @@ namespace SQLWorker.BLL
                     script = script.Replace(paramInfo.Name, paramInfo.Value);
                 }
             
-                return await Task.FromResult(_repository.ExecuteAndGetResult(script));
+                ScriptResult result = await Task.FromResult(_repository.ExecuteAndGetResult(script));
+                taskModel.StartTime = result.Start;
+                taskModel.EndTime = result.End;
+                taskModel.Errors = result.Error;
+                return result.DataSet;
             }
             catch (Exception e)
             {

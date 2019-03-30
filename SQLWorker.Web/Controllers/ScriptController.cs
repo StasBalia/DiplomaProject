@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ namespace SQLWorker.Web.Controllers
     {
         private readonly ILogger<ScriptController> _log;
         private readonly ScriptWorker _scriptWorker;
+        private TaskHandler _taskHandler = new TaskHandler();
         public ScriptController(ILogger<ScriptController> log, IScriptRepository repository)
         {
             _log = log;
@@ -44,14 +47,38 @@ namespace SQLWorker.Web.Controllers
                     Value = parameter.Value
                 });
             }
-
-            var scriptResult = await _scriptWorker.ExecuteScriptAsync(launchInfo);
+            
             var script = ScriptSources.GetSingleScriptByFilePath(new DirectoryInfo(request.PathToDirectory).FullName);
+            var fileExtension = Utilities.GetFileExtension(request.FileType.ToLower());
+            TaskModel taskModel = new TaskModel
+            {
+                Id = Guid.NewGuid(),
+                User = "",
+                TaskState = TaskState.Queued,
+                ScriptSource = script,
+                ScriptParameters = launchInfo.ParamInfos?.Select(x => x.Value).ToArray(),
+                ResultFileExtension = fileExtension
+            };
+            _taskHandler.AddTask(taskModel);
+            
+            taskModel.TaskState = TaskState.Started;
+            
+            var scriptResult = await _scriptWorker.ExecuteScriptAsync(launchInfo, taskModel);
+
+            if (scriptResult == null)
+            {
+                taskModel.TaskState = TaskState.Error;
+                return new EmptyResult();
+            }
+            
             string fileName = Utilities.GenerateFileNameForResult(script.Name) + request.FileType.ToLower();
             string resultPath = $"Results\\{script.Provider}_Results\\";
             await _scriptWorker.ConvertResultAndSaveToFileAsync(scriptResult, resultPath, fileName,
-                Utilities.GetFileExtension(request.FileType.ToLower()));
-            return new JsonResult(JsonConvert.SerializeObject(new
+                fileExtension);
+            taskModel.TaskState = TaskState.Success;
+            taskModel.DownloadPath = resultPath;
+            taskModel.DownloadName = fileName;
+            return new JsonResult(JsonConvert.SerializeObject(new DownloadInfo
             {
                 SavedPath = Path.Combine(resultPath,fileName),
                 FileName = fileName,

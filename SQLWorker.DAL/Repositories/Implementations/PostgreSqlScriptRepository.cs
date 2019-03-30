@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using SQLWorker.DAL.Models;
 using SQLWorker.DAL.Repositories.Interfaces;
 
 namespace SQLWorker.DAL.Repositories.Implementations
@@ -24,8 +25,10 @@ namespace SQLWorker.DAL.Repositories.Implementations
             _log = log;
             _connectionString = connectionString;
         }
-        public DataSet ExecuteAndGetResult(string script)
+        public ScriptResult ExecuteAndGetResult(string script)
         {
+            ScriptResult result = new ScriptResult();
+            result.Start = DateTime.UtcNow;
             try
             {
                 using (var connection = new NpgsqlConnection(_connectionString))
@@ -34,13 +37,18 @@ namespace SQLWorker.DAL.Repositories.Implementations
                     var npgsqlDataAdapter = new NpgsqlDataAdapter(command);
                     var ds = new DataSet();
                     npgsqlDataAdapter.Fill(ds);
-                    return ds;
+                    result.End = DateTime.UtcNow;
+                    result.DataSet = ds;
+                    return result;
                 }
             }
             catch (Exception e)
             {
                 _log.LogError("Exception while executing script {e}:",e);
-                return null;
+                result.Error = e.ToString();
+                result.End = DateTime.UtcNow;
+                result.DataSet = null;
+                return result;
             }
         }
     }

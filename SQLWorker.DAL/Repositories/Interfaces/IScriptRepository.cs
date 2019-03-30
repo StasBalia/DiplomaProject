@@ -1,10 +1,11 @@
 using System.Data;
 using System.Threading.Tasks;
+using SQLWorker.DAL.Models;
 
 namespace SQLWorker.DAL.Repositories.Interfaces
 {
     public interface IScriptRepository
     {
-        DataSet ExecuteAndGetResult(string script);
+        ScriptResult ExecuteAndGetResult(string script);
     }
 }
