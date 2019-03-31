@@ -45,5 +45,24 @@ namespace SQLWorker.DAL.Repositories.Implementations
                 return 0;
             }
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(_connectionString))
+                {
+                    return await connection.QueryFirstAsync<User>(@"SELECT * FROM users WHERE email = @email", new
+                    {
+                        email
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e.ToString());
+                return new User();
+            }
+        }
     }
 }

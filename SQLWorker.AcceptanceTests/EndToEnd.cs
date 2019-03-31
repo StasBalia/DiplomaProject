@@ -205,5 +205,31 @@ namespace SQLWorker.AcceptanceTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
         }
+
+        [Fact]
+        public async Task LogIn_GetRequest_ReturnsOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    "/Auth/LogIn");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
+        
+        [Fact]
+        public async Task LogIn_PostRequest_ReturnsOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.PostAsJsonAsync(
+                    "/Auth/LogIn", new LogInModel
+                    {
+                        Email = "stas@gmail.com",
+                        Password = "1"
+                    });
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
     }
 }

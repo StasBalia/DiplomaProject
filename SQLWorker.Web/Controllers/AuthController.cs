@@ -36,6 +36,32 @@ namespace SQLWorker.Web.Controllers
             return await SignInUserAsync(user);
         }
 
+        [HttpGet]
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LogIn(LogInModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await _userService.AuthenticateAsync(model.Email, model.Password);
+            if (user == null)
+            {
+                ModelState.AddModelError("Неправильний логін і/або пароль", "Не можемо перевірити ваші дані");
+                return View(model);
+            }
+
+            return await SignInUserAsync(new UserDTO
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
+            });
+        }
+
         private async Task<IActionResult> SignInUserAsync(UserDTO user)
         {
             var claims = new List<Claim>

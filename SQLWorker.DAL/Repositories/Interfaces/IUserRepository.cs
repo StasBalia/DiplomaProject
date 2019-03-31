@@ -6,5 +6,6 @@ namespace SQLWorker.DAL.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<long> SaveUserAsync(User userData);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }

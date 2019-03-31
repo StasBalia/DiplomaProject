@@ -23,7 +23,7 @@ namespace SQLWorker.UnitTests.DAL
         }
 
         [Fact]
-        public async Task ExecuteScript_Valid()
+        public async Task SaveUser_CorrectData_ReturnsUserId()
         {
             string param = new string(Guid.NewGuid().ToString().Take(15).ToArray());
             User userData = new User
@@ -36,6 +36,21 @@ namespace SQLWorker.UnitTests.DAL
             var res = await _repository.SaveUserAsync(userData);
 
             Assert.True(res > 0);
+        }
+
+        [Fact]
+        public async Task GetUserByName_CorrectUserName_ReturnsUser()
+        {
+            User expectedUser = new User
+            {
+                Name = "Stanislav",
+                Email = "stas@gmail.com",
+                Password = "黧蹁扈椵廗笪급瞛⚱䖤ﾹ욝骘禠"
+            };
+            string email = "stas@gmail.com";
+            var res = await _repository.GetUserByEmailAsync(email);
+            
+            res.Should().BeEquivalentTo(expectedUser);
         }
     }
 }

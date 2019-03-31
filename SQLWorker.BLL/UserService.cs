@@ -47,5 +47,19 @@ namespace SQLWorker.BLL
             };
             return await Task.FromResult(user);
         }
+
+        public async Task<User> AuthenticateAsync(string userName, string password)
+        {
+            string hashedPassword = HashString(password);
+            User userData = await _userRepository.GetUserByEmailAsync(userName.ToLower());
+            
+            if (userData == null)
+                return await Task.FromResult<User>(null);
+
+            if (!hashedPassword.Equals(userData.Password))
+                return await Task.FromResult<User>(null);
+
+            return await Task.FromResult(userData);
+        }
     }
 }
