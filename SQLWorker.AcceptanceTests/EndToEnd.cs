@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -188,13 +189,13 @@ namespace SQLWorker.AcceptanceTests
         [Fact]
         public async Task Register_PostRequest_ReturnsOk()
         {
-            
+            string param = new string(Guid.NewGuid().ToString().Take(15).ToArray());
             RegisterModel registerModel = new RegisterModel
             {
-                Name = "Stanislav",
-                Email = "myemail@gmail.com",
-                Password = "password",
-                RepeatPassword = "password"
+                Name = param,
+                Email = param,
+                Password = param,
+                RepeatPassword = param
                 
             };
             var client = _factory.CreateClient();

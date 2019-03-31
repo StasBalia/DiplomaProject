@@ -46,6 +46,8 @@ namespace SQLWorker.Web
             services.AddLogging(x => x.AddSerilog(dispose: true));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<IScriptRepository, PostgreSqlScriptRepository>(); //TODO: pass connstr to implementation
+            services.AddTransient<IUserRepository, PostgreSqlUserRepository>();
+            services.AddTransient<UserService>();
             services.AddSingleton(_ => Configuration);
             //var t = Configuration.GetValue<string>("ProdDatabase");
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
