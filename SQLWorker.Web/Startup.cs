@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,12 @@ namespace SQLWorker.Web
             services.AddTransient<IScriptRepository, PostgreSqlScriptRepository>(); //TODO: pass connstr to implementation
             services.AddSingleton(_ => Configuration);
             //var t = Configuration.GetValue<string>("ProdDatabase");
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/LogIn";
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +75,7 @@ namespace SQLWorker.Web
            // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

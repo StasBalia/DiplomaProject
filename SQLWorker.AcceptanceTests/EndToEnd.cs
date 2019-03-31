@@ -5,10 +5,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using SQLWorker.BLL;
 using SQLWorker.BLL.Models;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.Web;
+using SQLWorker.Web.Models.Request;
 using SQLWorker.Web.Models.Request.Github;
 using SQLWorker.Web.Models.Request.Script;
 using Xunit;
@@ -171,6 +173,36 @@ namespace SQLWorker.AcceptanceTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.IsSuccessStatusCode.Should().Be(true);
         }
+
+        [Fact]
+        public async Task Register_GetRequest_ReturnsOk()
+        {
+            var client = _factory.CreateClient();
+            var response =
+                await client.GetAsync(
+                    "/Auth/Register");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
         
+        [Fact]
+        public async Task Register_PostRequest_ReturnsOk()
+        {
+            
+            RegisterModel registerModel = new RegisterModel
+            {
+                Name = "Stanislav",
+                Email = "myemail@gmail.com",
+                Password = "password",
+                RepeatPassword = "password"
+                
+            };
+            var client = _factory.CreateClient();
+            var response =
+                await client.PostAsJsonAsync(
+                    "/Auth/Register",registerModel);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.IsSuccessStatusCode.Should().Be(true);
+        }
     }
 }
