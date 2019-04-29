@@ -1,14 +1,16 @@
+using System.Data;
 using System.IO;
-using System.Threading.Tasks;
 using SQLWorker.BLL.Models.Interfaces;
 
 namespace SQLWorker.BLL.ScriptConverters
 {
-    public class XmlSaver : IScriptSaver<string>
+    public class XmlConverter : IScriptConverter<string>
     {
-        public async Task SaveAsync(string objectToSave, string pathToSave, string fileName)
+        public string ConvertToRightFormat(DataSet result)
         {
-            await File.WriteAllTextAsync(Path.Combine(pathToSave + fileName), objectToSave);
+            StringWriter writer = new StringWriter();
+            result.Tables[0].WriteXml(writer, XmlWriteMode.WriteSchema, false);
+            return writer.ToString();
         }
     }
 }

@@ -17,42 +17,8 @@ namespace SQLWorker.UnitTests.BLL.SaversAndConverters
         public void ConvertToXml_ReturnCorrectXml()
         {
             IScriptConverter<string> converter = new XmlConverter();
-            DataSet ds = new DataSet
-            {
-                Tables =
-                {
-                    new DataTable
-                    {
-                        Columns =
-                        {
-                            new DataColumn
-                            {
-                                ColumnName = "colName",
-                                DataType = typeof(int)
-                            },
-                            new DataColumn
-                            {
-                                ColumnName = "col1Name",
-                                DataType = typeof(int)
-                            }
-                        },
-                        TableName = "TableName"
-                    }
-                }
-            };
-            var table = ds.Tables[0];
-            var dr = table.NewRow();
-            dr.ItemArray = new object[] {1, 2};
-            table.Rows.Add(dr);
-            var dr2 = table.NewRow();
-            dr2.ItemArray = new object[] {3, 4};
-            table.Rows.Add(dr2);
-            var dr3 = table.NewRow();
-            dr3.ItemArray = new object[] {5, 6};
-            table.Rows.Add(dr3);
 
-
-            string result = converter.ConvertToRightFormat(ds);
+            string result = converter.ConvertToRightFormat(TestHelper.SimpleDataSet());
             result.Should().NotBeNullOrEmpty();
 
             XmlDocument xmlDoc1 = new XmlDocument();
@@ -60,10 +26,10 @@ namespace SQLWorker.UnitTests.BLL.SaversAndConverters
             xmlDoc2.LoadXml(result);
             xmlDoc1.LoadXml("<NewDataSet>" +
                               "  <xs:schema id=\"NewDataSet\" xmlns=\"\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">" +
-                              "   <xs:element name=\"NewDataSet\" msdata:IsDataSet=\"true\" msdata:MainDataTable=\"TableName\" msdata:UseCurrentLocale=\"true\">" +
+                              "   <xs:element name=\"NewDataSet\" msdata:IsDataSet=\"true\" msdata:MainDataTable=\"Table1\" msdata:UseCurrentLocale=\"true\">" +
                               "     <xs:complexType>" +
                               "       <xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">" +
-                              "         <xs:element name=\"TableName\">" +
+                              "         <xs:element name=\"Table1\">" +
                               "           <xs:complexType>" +
                               "             <xs:sequence>" +
                               "                <xs:element name=\"colName\" type=\"xs:int\" minOccurs=\"0\" />" +
@@ -75,18 +41,18 @@ namespace SQLWorker.UnitTests.BLL.SaversAndConverters
                               "     </xs:complexType>" +
                               "   </xs:element>" +
                               " </xs:schema>" +
-                              " <TableName>" +
+                              " <Table1>" +
                               "   <colName>1</colName>" +
                               "   <col1Name>2</col1Name>" +
-                              " </TableName>" +
-                              " <TableName>" +
+                              " </Table1>" +
+                              " <Table1>" +
                               "   <colName>3</colName>" +
                               "   <col1Name>4</col1Name>" +
-                              " </TableName>" +
-                              " <TableName>" +
+                              " </Table1>" +
+                              " <Table1>" +
                               "   <colName>5</colName>" +
                               "   <col1Name>6</col1Name>" +
-                              " </TableName>" +
+                              " </Table1>" +
                               "</NewDataSet>");
 
             xmlDoc2.OuterXml.Should().BeEquivalentTo(xmlDoc1.OuterXml);
@@ -96,11 +62,11 @@ namespace SQLWorker.UnitTests.BLL.SaversAndConverters
         public async Task SaveXml()
         {
             string xml = string.Empty;
-            IScriptSaver<string> saver = new XmlSaver();
+            IScriptSaver saver = new XmlSaver();
             string path = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Results\github_Results\";
             string fileName = Utilities.GenerateFileNameForResult("fileScriptXml.sql") + "xml";
 
-            await saver.SaveAsync(xml, path, fileName);
+            await saver.SaveAsync(TestHelper.SimpleDataSet(), path, fileName);
             string fullPath = Path.Combine(path, fileName);
             bool isExist = File.Exists(fullPath);
             isExist.Should().BeTrue();

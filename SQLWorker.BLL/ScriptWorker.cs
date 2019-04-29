@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Serilog;
 using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
+using SQLWorker.BLL.Models.Interfaces;
 using SQLWorker.BLL.ScriptConverters;
 using SQLWorker.BLL.ScriptSavers;
 using SQLWorker.BLL.ScriptUtilities;
@@ -22,11 +24,19 @@ namespace SQLWorker.BLL
     {
         private readonly ILogger _log;
         private readonly IScriptRepository _repository;
+        private readonly Dictionary<FileExtension, IScriptSaver> _savers;
         
         public ScriptWorker(ILogger log, IScriptRepository repository)
         {
             _log = log;
             _repository = repository;
+            _savers = new Dictionary<FileExtension, IScriptSaver>(new List<KeyValuePair<FileExtension, IScriptSaver>>
+            {
+                new KeyValuePair<FileExtension, IScriptSaver>(FileExtension.csv, new CsvSaver()),
+                new KeyValuePair<FileExtension, IScriptSaver>(FileExtension.xml, new XmlSaver()),
+                new KeyValuePair<FileExtension, IScriptSaver>(FileExtension.xlsx, new XlsSaver()),
+                new KeyValuePair<FileExtension, IScriptSaver>(FileExtension.json, new JsonSaver()),
+            });
         }
 
 
@@ -75,39 +85,8 @@ namespace SQLWorker.BLL
             return ScriptSources.GetSingleScriptByFilePath(src).Parameters;
         }
 
-        public async Task ConvertResultAndSaveToFileAsync(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension)
-        {
-            switch (fileExtension)
-            {
-                   case FileExtension.csv:
-                        var converter = new CsvConverter();
-                        var convertedResult = converter.ConvertToRightFormat(ds);
-                        var saver = new CsvSaver();
-                        await saver.SaveAsync(convertedResult, pathToSave, fileName);
-                        break;
-                   case FileExtension.xml:
-                       var xmlConverter = new XmlConverter();
-                       var xmlConvertedResult = xmlConverter.ConvertToRightFormat(ds);
-                       var xmlSaver = new XmlSaver();
-                       await xmlSaver.SaveAsync(xmlConvertedResult, pathToSave, fileName);
-                       break;
-                   case FileExtension.xlsx:
-                       var xlsxConverter = new XlsConverter();
-                       var xlsConvertedResult = xlsxConverter.ConvertToRightFormat(ds);
-                       var xlsSaver = new XlsSaver();
-                       await xlsSaver.SaveAsync(xlsConvertedResult, pathToSave, fileName);
-                       xlsConvertedResult.Dispose();
-                       break;
-                   case FileExtension.json:
-                       var jsonConverter = new JsonConverter();
-                       var jsonConvertedResult = jsonConverter.ConvertToRightFormat(ds);
-                       var jsonSaver = new JsonSaver();
-                       await jsonSaver.SaveAsync(jsonConvertedResult, pathToSave, fileName);
-                       break;
-                   default:
-                        return;
-                    
-            }
-        }
+        public async Task ConvertResultAndSaveToFileAsync(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension) =>
+            await _savers[fileExtension].SaveAsync(ds, pathToSave, fileName);
+        
     }
 }

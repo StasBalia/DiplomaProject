@@ -1,9 +1,10 @@
+using System.Data;
 using System.Threading.Tasks;
 
 namespace SQLWorker.BLL.Models.Interfaces
 {
-    public interface IScriptSaver<T>
+    public interface IScriptSaver
     {
-        Task SaveAsync(T objectToSave, string pathToSave, string fileName);
+        Task SaveAsync(DataSet dataSet, string pathToSave, string fileName);
     }
 }
