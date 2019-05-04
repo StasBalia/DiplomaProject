@@ -15,14 +15,14 @@ namespace SQLWorker.Web.Controllers
         private readonly ILogger<GithubController> _log;
         private readonly GithubPuller _puller;
         private readonly ScriptLoader _scriptLoader;
-        private readonly ScriptWorker _scriptWorker;
+        private readonly ScriptUpdater _scriptUpdater;
 
-        public GithubController(ILogger<GithubController> log, ScriptWorker worker)
+        public GithubController(ILogger<GithubController> log)
         {
             _log = log;
             _puller = new GithubPuller();
             _scriptLoader = new ScriptLoader();
-            _scriptWorker = worker;
+            _scriptUpdater = new ScriptUpdater();
         }
 
         [HttpPost]
@@ -33,7 +33,7 @@ namespace SQLWorker.Web.Controllers
             await _puller.PullFromRepo(repoName);
             ScriptSources.RemoveAll();
             await _scriptLoader.LoadScriptsAsync("Scripts/");
-            await _scriptWorker.CopyScripts(ScriptProvider.Github, repoName, pushEvent.Commits.FirstOrDefault()?.Modified?.ToArray()); //TODO: need to check all of Added, Modifed, Deleted
+            await _scriptUpdater.CreateOrCopyScripts(ScriptProvider.Github, repoName, pushEvent.Commits.FirstOrDefault()?.Modified?.ToArray()); //TODO: need to check all of Added, Modifed, Deleted
             return Ok();
         }
     }
