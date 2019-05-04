@@ -341,5 +341,26 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
             res.Should().BeFalse();
             
         }
+
+        [Fact]
+        public async Task CopyScript_FileExists_ReturnOk()
+        {
+            #region Arrange
+
+            string repoPath = @"..\..\..\..\SQLWorker.Web\Scripts\github\DiplomaSqlScripts\"; //TODO: how to test it, when i run tests from unit tests\bin\Debug folder.
+            string repoName = @"DiplomaSqlScripts\";
+            string fullPath = Utilities.GetFullPath(repoPath, "test.sql");
+            ScriptProvider sp = ScriptProvider.Github;
+            
+            if(File.Exists(fullPath))
+                File.Delete(fullPath);
+
+            #endregion
+            
+            
+            bool res = await _scriptWorker.CopyScripts(sp, repoName, new[] {"test.sql"});
+
+            res.Should().BeTrue();
+        }
     }
 }

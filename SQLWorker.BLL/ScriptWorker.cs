@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -25,8 +27,10 @@ namespace SQLWorker.BLL
         private readonly ILogger _log;
         private readonly IScriptRepository _repository;
         private readonly Dictionary<FileExtension, IScriptSaver> _savers;
+        private const string PATH_TO_REPO = @"..\..\Repos\";
+        private const string PATH_TO_SAVE = @"..\SQLWorker.Web\Scripts\";
         
-        public ScriptWorker(ILogger log, IScriptRepository repository)
+        public ScriptWorker(ILogger<ScriptWorker> log, IScriptRepository repository)
         {
             _log = log;
             _repository = repository;
@@ -91,7 +95,39 @@ namespace SQLWorker.BLL
 
         public async Task<bool> CopyScripts(ScriptProvider provider, string repositoryName, string[] modifiedFiles)
         {
-            return await Task.FromResult(false);
+            try
+            {
+                if (string.IsNullOrEmpty(repositoryName))
+                    return await Task.FromResult(false); //TODO: need to write error to log
+                if(modifiedFiles == null || modifiedFiles.Length == 0)   
+                    return await Task.FromResult(false); //TODO: need to write error to log
+
+                string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
+                string pathFrom = Utilities.GetFullPath(PATH_TO_REPO, repositoryName);
+                
+                foreach (var file in modifiedFiles)
+                {
+                    var fileFrom = Directory.GetFiles(pathFrom, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(file));
+                    string content = await File.ReadAllTextAsync(fileFrom);
+                    string fileTo = Path.Combine(pathTo, file);
+                    if (File.Exists(fileTo))
+                        await File.AppendAllTextAsync(fileTo, content);
+                    else
+                    {
+                        Directory.CreateDirectory(pathTo);
+                        using (var wr = File.Create(fileTo))
+                        {
+                            await wr.WriteAsync(Encoding.UTF8.GetBytes(content));
+                        }
+                    }
+                }
+            
+                return await Task.FromResult(false);
+            }
+            catch (Exception e)
+            {
+                return await Task.FromResult(false);
+            }
         }
     }
 }

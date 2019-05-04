@@ -20,7 +20,7 @@ namespace SQLWorker.UnitTests.Controller
         public ScriptControllerTests()
         {
             var repository = new Mock<IScriptRepository>();
-            _controller = new ScriptController(null,repository.Object);
+            _controller = new ScriptController(null,repository.Object, null);
         }
 
         [Theory]

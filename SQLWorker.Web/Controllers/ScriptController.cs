@@ -22,10 +22,10 @@ namespace SQLWorker.Web.Controllers
     {
         private readonly ILogger<ScriptController> _log;
         private readonly ScriptWorker _scriptWorker;
-        public ScriptController(ILogger<ScriptController> log, IScriptRepository repository)
+        public ScriptController(ILogger<ScriptController> log, IScriptRepository repository, ScriptWorker worker)
         {
             _log = log;
-            _scriptWorker = new ScriptWorker(log, repository);
+            _scriptWorker = worker;
         }
 
         [HttpPost]
