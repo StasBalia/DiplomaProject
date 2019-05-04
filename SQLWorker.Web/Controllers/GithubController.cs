@@ -33,7 +33,7 @@ namespace SQLWorker.Web.Controllers
             await _puller.PullFromRepo(repoName);
             ScriptSources.RemoveAll();
             await _scriptLoader.LoadScriptsAsync("Scripts/");
-            await _scriptUpdater.CreateOrCopyScripts(ScriptProvider.Github, repoName, pushEvent.Commits.FirstOrDefault()?.Modified?.ToArray()); //TODO: need to check all of Added, Modifed, Deleted
+            await _scriptUpdater.CreateOrCopyScriptsAsync(ScriptProvider.Github, repoName, pushEvent.Commits.FirstOrDefault()?.Modified?.ToArray()); //TODO: need to check all of Added, Modifed, Deleted
             return Ok();
         }
     }

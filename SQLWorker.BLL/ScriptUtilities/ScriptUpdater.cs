@@ -12,15 +12,12 @@ namespace SQLWorker.BLL.ScriptUtilities
         private const string PATH_TO_REPO = @"..\..\Repos\";
         private const string PATH_TO_SAVE = @"..\SQLWorker.Web\Scripts\";
         
-        public async Task<bool> CreateOrCopyScripts(ScriptProvider provider, string repositoryName, string[] fileNames)
+        public async Task<bool> CreateOrCopyScriptsAsync(ScriptProvider provider, string repositoryName, string[] fileNames)
         {
             try
             {
-                if (string.IsNullOrEmpty(repositoryName))
-                    return await Task.FromResult(false); //TODO: need to write error to log
-                if(fileNames == null || fileNames.Length == 0)   
-                    return await Task.FromResult(false); //TODO: need to write error to log
-
+                if (!IsValidInput(provider, repositoryName, fileNames))
+                    return await Task.FromResult(false); 
                 string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
                 string pathFrom = Utilities.GetFullPath(PATH_TO_REPO, repositoryName);
                 
@@ -41,12 +38,54 @@ namespace SQLWorker.BLL.ScriptUtilities
                     }
                 }
             
-                return await Task.FromResult(false);
+                return await Task.FromResult(true);
             }
             catch (Exception e)
             {
                 return await Task.FromResult(false);
             }
+        }
+
+        public async Task<bool> DeleteScriptsAsync(ScriptProvider provider, string repositoryName, string[] fileNames)
+        {
+            try
+            {
+                if (!IsValidInput(provider, repositoryName, fileNames))
+                    return await Task.FromResult(false);
+                
+                string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
+                
+                foreach (var file in fileNames)
+                {
+                    try
+                    {
+                        string fileTo = Directory.GetFiles(pathTo, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(file));
+                        File.Delete(fileTo);
+                    }
+                    catch (Exception e)
+                    {
+                        //TODO: log that file was not found
+                    }
+                }
+                
+                return await Task.FromResult(true);
+            }
+            catch (Exception e)
+            {
+                return await Task.FromResult(false);
+            }
+        }
+
+        public bool IsValidInput(ScriptProvider provider, string repositoryName, string[] fileNames)
+        {
+            if (!Enum.IsDefined(typeof(ScriptProvider), provider))
+                return false;
+            if (string.IsNullOrEmpty(repositoryName))
+                return false; //TODO: need to write error to log
+            if(fileNames == null)   
+                return false; //TODO: need to write error to log
+            
+            return true;
         }
     }
 }
