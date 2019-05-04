@@ -87,6 +87,11 @@ namespace SQLWorker.BLL
 
         public async Task ConvertResultAndSaveToFileAsync(DataSet ds, string pathToSave, string fileName, FileExtension fileExtension) =>
             await _savers[fileExtension].SaveAsync(ds, pathToSave, fileName);
-        
+
+
+        public async Task<bool> CopyScripts(ScriptProvider provider, string repositoryName, string[] modifiedFiles)
+        {
+            return await Task.FromResult(false);
+        }
     }
 }

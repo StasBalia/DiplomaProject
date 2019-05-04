@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using SQLWorker.BLL.Models.Enums;
 
@@ -24,6 +25,14 @@ namespace SQLWorker.BLL.ScriptUtilities
                 default:
                     return default(FileExtension);
             }
+        }
+
+        public static string GetFullPath(string path1, string path2)
+        {
+            if (string.IsNullOrEmpty(path1) && string.IsNullOrEmpty(path2))
+                return string.Empty;
+            string path = Path.Combine(path1, path2);
+            return new DirectoryInfo(path).FullName;
         }
     }
 }

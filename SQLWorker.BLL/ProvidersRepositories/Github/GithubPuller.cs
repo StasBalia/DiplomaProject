@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
+using SQLWorker.BLL.ScriptUtilities;
 
 namespace SQLWorker.BLL.ProvidersRepositories.Github
 {
@@ -13,13 +14,11 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
         private const string EMAIL = "balya.stanislav@gmail.com";
         private const string PATH_TO_REPO = @"..\..\Repos\";
         
-        public async Task<bool> PullFromRepo(string fullName)
+        public async Task<bool> PullFromRepo(string repositoryName)
         {
-            string path = Path.Combine(PATH_TO_REPO, fullName);
-            string fullPath = new DirectoryInfo(path).FullName;
             try
             {
-                Task pull = Task.Factory.StartNew(() => { using (var repo = new Repository(fullPath))
+                Task pull = Task.Factory.StartNew(() => { using (var repo = new Repository(Utilities.GetFullPath(PATH_TO_REPO, repositoryName)))
                 {
                     // Credential information to fetch
                     PullOptions options = new PullOptions
