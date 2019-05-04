@@ -14,7 +14,7 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
         private const string EMAIL = "balya.stanislav@gmail.com";
         private const string PATH_TO_REPO = @"..\..\Repos\";
         
-        public async Task<bool> PullFromRepo(string repositoryName)
+        public async Task<bool> PullFromRepoAsync(string repositoryName)
         {
             try
             {

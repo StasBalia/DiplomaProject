@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SQLWorker.BLL;
+using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ProvidersRepositories.Github;
 using SQLWorker.BLL.ScriptUtilities;
@@ -30,10 +32,33 @@ namespace SQLWorker.Web.Controllers
         {
             string repoName = pushEvent.Repository.Name + "\\";
             _log.LogInformation("JSON from webhook: {obj}", pushEvent);
-            await _puller.PullFromRepo(repoName);
+            await _puller.PullFromRepoAsync(repoName);
             ScriptSources.RemoveAll();
+            
+            List<Commit> commits = new List<Commit>();
+            foreach (var commit in pushEvent.Commits)
+            {
+                commits.Add(new Commit
+                {
+                    Url = commit.Url,
+                    Added = commit.Added,
+                    Message = commit.Message,
+                    Removed = commit.Removed,
+                    Author = new Author
+                    {
+                        Name = commit.AuthorDto.Name,
+                        Email = commit.AuthorDto.Email
+                    },
+                    Distinct = commit.Distinct,
+                    Modified = commit.Modified,
+                    TimeStamp = commit.TimeStamp,
+                    SHA = commit.SHA
+                });
+            }
+            
+            await _scriptUpdater.StartUpdateScriptsAsync(repoName, commits);
+            
             await _scriptLoader.LoadScriptsAsync("Scripts/");
-            await _scriptUpdater.CreateOrCopyScriptsAsync(ScriptProvider.Github, repoName, pushEvent.Commits.FirstOrDefault()?.Modified?.ToArray()); //TODO: need to check all of Added, Modifed, Deleted
             return Ok();
         }
     }

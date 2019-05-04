@@ -50,11 +50,11 @@ namespace SQLWorker.AcceptanceTests
                     FullName = "b"
                 },
                 Ref = "m/a"
-                ,Commits = new List<Commit>
+                ,Commits = new List<CommitDTO>
                 {
-                    new Commit
+                    new CommitDTO
                     {
-                        Author = new Author
+                        AuthorDto = new AuthorDTO
                         {
                             Email = "email",
                             Name = "Stas"

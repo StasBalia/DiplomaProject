@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace SQLWorker.Web.Models.Request.Github
+namespace SQLWorker.BLL.Models
 {
     public class Commit
     {

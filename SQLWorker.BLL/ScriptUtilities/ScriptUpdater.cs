@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
+
 
 namespace SQLWorker.BLL.ScriptUtilities
 {
@@ -12,7 +15,7 @@ namespace SQLWorker.BLL.ScriptUtilities
         private const string PATH_TO_REPO = @"..\..\Repos\";
         private const string PATH_TO_SAVE = @"..\SQLWorker.Web\Scripts\";
         
-        public async Task<bool> CreateOrCopyScriptsAsync(ScriptProvider provider, string repositoryName, string[] fileNames)
+        public async Task<bool> CreateOrCopyScriptsAsync(ScriptProvider provider, string repositoryName, List<string> fileNames)
         {
             try
             {
@@ -46,7 +49,7 @@ namespace SQLWorker.BLL.ScriptUtilities
             }
         }
 
-        public async Task<bool> DeleteScriptsAsync(ScriptProvider provider, string repositoryName, string[] fileNames)
+        public async Task<bool> DeleteScriptsAsync(ScriptProvider provider, string repositoryName, List<string> fileNames)
         {
             try
             {
@@ -76,7 +79,7 @@ namespace SQLWorker.BLL.ScriptUtilities
             }
         }
 
-        public bool IsValidInput(ScriptProvider provider, string repositoryName, string[] fileNames)
+        public bool IsValidInput(ScriptProvider provider, string repositoryName, List<string> fileNames)
         {
             if (!Enum.IsDefined(typeof(ScriptProvider), provider))
                 return false;
@@ -86,6 +89,21 @@ namespace SQLWorker.BLL.ScriptUtilities
                 return false; //TODO: need to write error to log
             
             return true;
+        }
+
+        public async Task<bool> StartUpdateScriptsAsync(string repositoryName, List<Commit> commits)
+        {
+            try
+            {
+                Commit commit = commits.OrderByDescending(x => x.TimeStamp).FirstOrDefault();
+                return await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Added) &&
+                       await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Modified) &&
+                       await DeleteScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Removed);
+            }
+            catch (Exception e)
+            {
+                return await Task.FromResult(false);
+            }
         }
     }
 }

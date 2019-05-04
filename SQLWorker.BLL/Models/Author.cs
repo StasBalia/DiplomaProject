@@ -1,4 +1,4 @@
-namespace SQLWorker.Web.Models.Request.Github
+namespace SQLWorker.BLL.Models
 {
     public class Author
     {
