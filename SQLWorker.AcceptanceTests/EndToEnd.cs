@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using SQLWorker.BLL;
 using SQLWorker.BLL.Models;
+using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.Web;
 using SQLWorker.Web.Models.Request;
@@ -82,7 +83,7 @@ namespace SQLWorker.AcceptanceTests
                 Name = "testScript.sql",
                 Parameters = new List<string> {"{id}"},
                 Path = @"Scripts\github\testScript.sql",
-                Provider = "github"
+                Provider = ScriptProvider.Github
             });
             var launch = new LaunchInfoDTO
             {

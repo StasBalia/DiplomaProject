@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
 using Xunit;
 
@@ -33,14 +34,14 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
         }
 
         [Theory]
-        [InlineData("Scripts/Github", "github")]
-        [InlineData("Scripts/svn", "svn")]
-        [InlineData("Scripts/Svn", "svn")]
-        [InlineData("Scripts/github", "github")]
-        [InlineData("incorrect provider", "")]
-        public void DetermineValueForProvider_ReturnCorrectProvider(string path, string expectedProvider)
+        [InlineData("Scripts/Github", ScriptProvider.Github)]
+        [InlineData("Scripts/github", ScriptProvider.Github)]
+        [InlineData("Scripts/svn", ScriptProvider.Svn)]
+        [InlineData("Scripts/Svn", ScriptProvider.Svn)]
+        [InlineData("incorrect provider", ScriptProvider.Unkown)]
+        public void DetermineValueForProvider_ReturnCorrectProvider(string path, ScriptProvider expectedProvider)
         {
-            string result = _loader.DetermineProvider(path);
+            ScriptProvider result = _loader.DetermineProvider(path);
             result.Should().Be(expectedProvider);
         }
     }

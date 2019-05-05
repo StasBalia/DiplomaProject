@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SQLWorker.BLL.Models.Enums;
 
 namespace SQLWorker.BLL.Models
 {
@@ -6,7 +7,7 @@ namespace SQLWorker.BLL.Models
     {
         public string Name { get; set; }
         public string Path { get; set; }
-        public string Provider { get; set; }
+        public ScriptProvider Provider { get; set; }
         public List<string> Parameters { get; set; }
     }
 }

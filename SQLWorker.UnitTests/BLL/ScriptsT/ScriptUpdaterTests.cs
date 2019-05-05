@@ -12,6 +12,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
     public class ScriptUpdaterTests
     {
         private readonly ScriptUpdater _scriptUpdater;
+        private static readonly List<string> _list = new List<string>();
 
         public ScriptUpdaterTests()
         {
@@ -36,10 +37,24 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
             res.Should().BeTrue();
         }
 
-        [Theory]
-        [InlineData("",null, null, false)]
-        [InlineData("asd","", null, false)]
-        //[InlineData("","", new List<string>(), false)] TODO: change this case to work with empty list        
+        public static IEnumerable<object[]> DataSets =>
+            new[]
+            {
+                new object[]
+                {
+                    "", null, null, false
+                },
+                new object[]
+                {
+                    "asd","", null, false
+                },
+                new object[]
+                {
+                    "","", new List<string>(), false
+                }
+            };
+        
+        [Theory, MemberData(nameof(DataSets))]
         public void ValidateInputParams_Invalid_ReturnsFalse(string provider, string repoName, List<string> files, bool expected)
         {
             Enum.TryParse(provider, out ScriptProvider parsed);

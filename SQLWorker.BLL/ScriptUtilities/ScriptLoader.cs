@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SQLWorker.BLL.Models;
+using SQLWorker.BLL.Models.Enums;
 
 namespace SQLWorker.BLL.ScriptUtilities
 {
@@ -37,11 +38,11 @@ namespace SQLWorker.BLL.ScriptUtilities
             return await Task.Run(() => directory.GetFiles(searchPattern, searchOption));
         }
 
-        public string DetermineProvider(string path)
+        public ScriptProvider DetermineProvider(string path)
         {
             string lowerCasePath = path.ToLower();
-            return lowerCasePath.Contains("git") || lowerCasePath.Contains("github") ? "github" :
-                lowerCasePath.Contains("svn")? "svn" : string.Empty;
+            return lowerCasePath.Contains("git") || lowerCasePath.Contains("github") ? ScriptProvider.Github :
+                lowerCasePath.Contains("svn")? ScriptProvider.Svn : ScriptProvider.Unkown;
         }
     }
 }
