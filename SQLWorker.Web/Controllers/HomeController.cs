@@ -20,7 +20,6 @@ namespace SQLWorker.Web.Controllers
         }
         public IActionResult Index()
         {
-            _log.LogInformation("Hi");
             return View();
         }
 

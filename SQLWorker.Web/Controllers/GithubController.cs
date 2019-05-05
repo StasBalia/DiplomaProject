@@ -19,12 +19,12 @@ namespace SQLWorker.Web.Controllers
         private readonly ScriptLoader _scriptLoader;
         private readonly ScriptUpdater _scriptUpdater;
 
-        public GithubController(ILogger<GithubController> log)
+        public GithubController(ILogger<GithubController> log, ScriptUpdater updater, GithubPuller puller)
         {
             _log = log;
-            _puller = new GithubPuller();
+            _puller = puller;
             _scriptLoader = new ScriptLoader();
-            _scriptUpdater = new ScriptUpdater();
+            _scriptUpdater = updater;
         }
 
         [HttpPost]
@@ -32,7 +32,15 @@ namespace SQLWorker.Web.Controllers
         {
             string repoName = pushEvent.Repository.Name + "\\";
             _log.LogInformation("JSON from webhook: {obj}", pushEvent);
-            await _puller.PullFromRepoAsync(repoName);
+            bool isPulled = await _puller.PullFromRepoAsync(repoName);
+            
+            if(isPulled)
+                _log.LogInformation("Pull — done!");
+            else
+            {
+                _log.LogError("Pull failed.");
+                return Ok();
+            }
             ScriptSources.RemoveAll();
             
             List<Commit> commits = new List<Commit>();
@@ -57,8 +65,11 @@ namespace SQLWorker.Web.Controllers
             }
             
             await _scriptUpdater.StartUpdateScriptsAsync(repoName, commits);
+            _log.LogInformation("Updating scripts is ok.");
             
             await _scriptLoader.LoadScriptsAsync("Scripts/");
+            _log.LogInformation("Reloading scripts is ok.");
+            
             return Ok();
         }
     }

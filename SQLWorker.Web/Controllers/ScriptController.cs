@@ -22,7 +22,7 @@ namespace SQLWorker.Web.Controllers
     {
         private readonly ILogger<ScriptController> _log;
         private readonly ScriptWorker _scriptWorker;
-        public ScriptController(ILogger<ScriptController> log, IScriptRepository repository, ScriptWorker worker)
+        public ScriptController(ILogger<ScriptController> log, ScriptWorker worker)
         {
             _log = log;
             _scriptWorker = worker;
@@ -31,6 +31,11 @@ namespace SQLWorker.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Launch([FromBody]LaunchInfoDTO request)
         {
+            _log.LogInformation(
+                "Script {@ScriptName} was launched by {@Name} with parameters {@Parameters} and extension to save {@FileType}",
+                request.PathToDirectory.Split("/")?.LastOrDefault(), HttpContext.User.Identity.Name,
+                request.Parameters, request.FileType);
+            
             //TODO: заюзай якийсь автомапер.
             List<ParamInfoDTO> parameters = JsonConvert.DeserializeObject<List<ParamInfoDTO>>(request.Parameters);
             LaunchInfo launchInfo = new LaunchInfo
@@ -63,13 +68,17 @@ namespace SQLWorker.Web.Controllers
             
             taskModel.TaskState = TaskState.Started;
             
+            _log.LogInformation("Task state for {@ScriptName} is {@TaskState}", request.PathToDirectory.Split("/")?.LastOrDefault(), taskModel.TaskState);
+            
             var scriptResult = await _scriptWorker.ExecuteScriptAsync(launchInfo, taskModel);
-
+            
             if (scriptResult == null)
             {
+                _log.LogError("Script result is null!");
                 taskModel.TaskState = TaskState.Error;
                 return new EmptyResult();
             }
+            _log.LogInformation("Script executed successfully.");
             
             string fileName = Utilities.GenerateFileNameForResult(script.Name) + request.FileType.ToLower();
             string resultPath = $"Results\\{script.Provider}_Results\\";
@@ -78,6 +87,7 @@ namespace SQLWorker.Web.Controllers
             taskModel.TaskState = TaskState.Success;
             taskModel.DownloadPath = resultPath;
             taskModel.DownloadName = fileName;
+            _log.LogInformation("Script {@ScriptName} saved and converted successfully. {@TaskState}", request.PathToDirectory.Split("\\")?.LastOrDefault(), taskModel.TaskState);
             return new JsonResult(JsonConvert.SerializeObject(new DownloadInfo
             {
                 SavedPath = Path.Combine(resultPath,fileName),

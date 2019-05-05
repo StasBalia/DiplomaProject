@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 using SQLWorker.BLL;
+using SQLWorker.BLL.ProvidersRepositories.Github;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL;
 using SQLWorker.DAL.Repositories.Implementations;
@@ -49,6 +51,8 @@ namespace SQLWorker.Web
             services.AddTransient<IUserRepository, PostgreSqlUserRepository>();
             services.AddTransient<UserService>();
             services.AddTransient<ScriptWorker>();
+            services.AddTransient<ScriptUpdater>();
+            services.AddTransient<GithubPuller>();
             services.AddSingleton(_ => Configuration);
             //var t = Configuration.GetValue<string>("ProdDatabase");
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -57,6 +61,13 @@ namespace SQLWorker.Web
                     options.LoginPath = "/Auth/LogIn";
                     options.AccessDeniedPath = "/Auth/AccessDenied";
                 });
+            
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Error)
+                .WriteTo.Console()
+                .WriteTo.RollingFile("{Date}_log.txt")
+                .CreateLogger(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

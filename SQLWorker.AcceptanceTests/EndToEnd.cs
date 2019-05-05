@@ -82,12 +82,12 @@ namespace SQLWorker.AcceptanceTests
             {
                 Name = "testScript.sql",
                 Parameters = new List<string> {"{id}"},
-                Path = @"Scripts\github\testScript.sql",
+                Path = @"Scripts/github/testScript.sql",
                 Provider = ScriptProvider.Github
             });
             var launch = new LaunchInfoDTO
             {
-                PathToDirectory = @"Scripts\github\testScript.sql",
+                PathToDirectory = @"Scripts/github/testScript.sql",
                 Parameters = "[{\"Name\":\"{id}\",\"Value\":\"2\"}]",
                 FileType = "csv"
             };

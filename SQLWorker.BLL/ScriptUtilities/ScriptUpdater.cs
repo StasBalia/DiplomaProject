@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
 
@@ -14,6 +15,16 @@ namespace SQLWorker.BLL.ScriptUtilities
     {
         private const string PATH_TO_REPO = @"..\..\Repos\";
         private const string PATH_TO_SAVE = @"..\SQLWorker.Web\Scripts\";
+        private ILogger _log;
+        public ScriptUpdater()
+        {
+            
+        }
+
+        public ScriptUpdater(ILogger<ScriptUpdater> log)
+        {
+            _log = log;
+        }
         
         public async Task<bool> CreateOrCopyScriptsAsync(ScriptProvider provider, string repositoryName, List<string> fileNames)
         {
@@ -45,6 +56,7 @@ namespace SQLWorker.BLL.ScriptUtilities
             }
             catch (Exception e)
             {
+                _log.LogError("Something went wrong. Ex: {@e}", e);
                 return await Task.FromResult(false);
             }
         }
@@ -67,7 +79,7 @@ namespace SQLWorker.BLL.ScriptUtilities
                     }
                     catch (Exception e)
                     {
-                        //TODO: log that file was not found
+                        _log.LogError("File {@file} not found for delete.", file);
                     }
                 }
                 
@@ -75,6 +87,7 @@ namespace SQLWorker.BLL.ScriptUtilities
             }
             catch (Exception e)
             {
+                _log.LogError("Something went wrong. Ex: {@e}", e);
                 return await Task.FromResult(false);
             }
         }
@@ -84,11 +97,16 @@ namespace SQLWorker.BLL.ScriptUtilities
             if (!Enum.IsDefined(typeof(ScriptProvider), provider))
                 return false;
             if (string.IsNullOrEmpty(repositoryName))
-                return false; //TODO: need to write error to log
-            if(fileNames == null)   
-                return false; //TODO: need to write error to log
+            {
+                _log.LogWarning("Repository name is null.", repositoryName);
+                return false;
+            }
+
+            if (fileNames != null) return true;
             
-            return true;
+            _log.LogWarning("File array is empty - {@repositoryName}", repositoryName);
+            return false;
+
         }
 
         public async Task<bool> StartUpdateScriptsAsync(string repositoryName, List<Commit> commits)
@@ -102,6 +120,7 @@ namespace SQLWorker.BLL.ScriptUtilities
             }
             catch (Exception e)
             {
+                _log.LogError("Something went wrong. Ex: {@e}", e);
                 return await Task.FromResult(false);
             }
         }

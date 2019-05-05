@@ -10,7 +10,7 @@ namespace SQLWorker.BLL.ScriptUtilities
 {
     public class ScriptLoader
     {
-        public async Task LoadScriptsAsync(string path)
+        public async Task LoadScriptsAsync(string path) //TODO: хто повинен відповідати за коректний path?
         {
             var files = await GetFilesFromDirectoryAsync(path, "*.sql",
                 SearchOption.AllDirectories);

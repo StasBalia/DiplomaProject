@@ -45,7 +45,7 @@ namespace SQLWorker.BLL
 
         public async Task<DataSet> ExecuteScriptAsync(LaunchInfo launchInfo, TaskModel taskModel)
         {
-            //_log.LogInformation("Start executing script.");
+            _log.LogInformation("Start executing script.");
             try
             {
                 var scriptFile = File.ReadAllLines(launchInfo.PathToScriptFile);
@@ -73,12 +73,12 @@ namespace SQLWorker.BLL
         {
             if (result == null)
             {
-                _log.LogError("Не отримали dataSet");
+                _log.LogError("Dataset = null.");
                 return false;
             }
 
             if (result.Tables.Count != 0) return true;
-            _log.LogError("Немає таблиць в dataSet");
+            _log.LogError("There are no tables in dataset.");
             return false;
 
         }

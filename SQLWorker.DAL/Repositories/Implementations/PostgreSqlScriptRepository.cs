@@ -14,7 +14,7 @@ namespace SQLWorker.DAL.Repositories.Implementations
         private readonly ILogger _log;
         private readonly string _connectionString;
         
-        public PostgreSqlScriptRepository(ILogger<PostgreSqlScriptRepository> log, IOptions<DatabaseSettings> dbSettings) //TODO: make test constructor pls
+        public PostgreSqlScriptRepository(ILogger<PostgreSqlScriptRepository> log, IOptions<DatabaseSettings> dbSettings)
         {
             _log = log;
             _connectionString = dbSettings.Value.TestDatabase;

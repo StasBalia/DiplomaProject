@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using SQLWorker.BLL.Models;
 using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
@@ -16,7 +17,8 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
 
         public ScriptUpdaterTests()
         {
-            _scriptUpdater = new ScriptUpdater();
+            var logFactory = new LoggerFactory();
+            _scriptUpdater = new ScriptUpdater(logFactory.CreateLogger<ScriptUpdater>());
         }
         
         [Fact]
