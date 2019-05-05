@@ -33,7 +33,7 @@ namespace SQLWorker.UnitTests.BLL
 
             var taskId = model.Id;
             TaskHandler.AddTask(model);
-            var task = TaskHandler.GetAllTasks().FirstOrDefault(x => x.Id.Equals(taskId));
+            var task = TaskHandler.GetAllTasks(x => x.Id.Equals(taskId)).FirstOrDefault();
             task.Should().BeEquivalentTo(model);
         }
     }

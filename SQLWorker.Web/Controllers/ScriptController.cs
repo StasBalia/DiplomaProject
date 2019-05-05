@@ -111,11 +111,11 @@ namespace SQLWorker.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<List<TaskViewModel>> GetTasksForUser() //TODO: In future, pls do validation for user.
+        public async Task<List<TaskViewModel>> GetTasksForUser()
         {
             return await Task.Run(() =>
             {
-                var allTasks = TaskHandler.GetAllTasks();
+                var allTasks = TaskHandler.GetAllTasks(x => x.User.Equals(HttpContext.User.Identity.Name));
                 List<TaskViewModel> taskViewModels = new List<TaskViewModel>();
                 foreach (var task in allTasks)
                 {
@@ -141,7 +141,7 @@ namespace SQLWorker.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetScriptInfo([FromQuery] Guid guid)
         {
-            return await Task.Run(() => View(TaskHandler.GetAllTasks().FirstOrDefault(x => x.Id.Equals(guid))));
+            return await Task.Run(() => View(TaskHandler.GetAllTasks(x => x.Id.Equals(guid)).FirstOrDefault()));
         }
 
 

@@ -32,6 +32,6 @@ namespace SQLWorker.BLL
             _taskModels.AddOrUpdate(model.Id, model, (guid, taskModel) => model);
         }
 
-        public static List<TaskModel> GetAllTasks() => _taskModels.Values.ToList();
+        public static List<TaskModel> GetAllTasks(Func<TaskModel, bool> predicate) => _taskModels.Values.Where(predicate).ToList();
     }
 }
