@@ -66,7 +66,7 @@ namespace SQLWorker.Web
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Error)
                 .WriteTo.Console()
-                .WriteTo.RollingFile("{Date}_log.txt")
+                .WriteTo.RollingFile("Logs\\{Date}_log.txt")
                 .CreateLogger(); 
         }
 
