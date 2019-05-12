@@ -58,7 +58,7 @@ namespace SQLWorker.Web.Controllers
             TaskModel taskModel = new TaskModel
             {
                 Id = Guid.NewGuid(),
-                User = "",
+                User = HttpContext.User.Identity.Name,
                 TaskState = TaskState.Queued,
                 ScriptSource = script,
                 ScriptParameters = launchInfo.ParamInfos?.Select(x => x.Value).ToArray(),
