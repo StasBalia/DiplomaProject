@@ -7,13 +7,13 @@
     <div asp-validation-summary="All" class="alert alert-danger"></div>
 }
 
-<form class="form" method="post" novalidate>
-    <h2 class="form-heading">Please sign in</h2>
+<form class="form" method="post" novalidate style="text-align: center;">
+    <h2 class="form-heading">Форма входу</h2>
     <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" asp-for="Email" id="inputEmail" class="form-control first" placeholder="Email address" required autofocus />
+    <input type="email" asp-for="Email" id="inputEmail" class="form-control first" placeholder="Введіть ваш e-mail" required autofocus style="margin-bottom: 10px;"/>
     <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" asp-for="Password" id="inputPassword" class="form-control last" placeholder="Password" required />
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
-</form>
+    <input type="password" asp-for="Password" id="inputPassword" class="form-control last" placeholder="Введіть ваш пароль" required style="margin-bottom: 10px;"/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Увійти</button>
+    </form>
 
-<hr />
+<hr/>

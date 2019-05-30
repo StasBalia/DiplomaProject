@@ -18,7 +18,8 @@ UL.jqueryFileTree A {
 	color: #333;
 	text-decoration: none;
 	display: block;
-	padding: 0px 2px;
+	padding: 2px 4px;
+	font-size: medium;
 }
 
 UL.jqueryFileTree A:hover {
