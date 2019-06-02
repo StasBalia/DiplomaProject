@@ -26,6 +26,9 @@ namespace SQLWorker.Web.Controllers
         [HttpPost]
         public async Task GetFileTree()
         {
+            if (string.IsNullOrEmpty(HttpContext.User.Identity.Name))
+                return;
+            
             await Task.Run(() =>
             {
                 
@@ -36,7 +39,6 @@ namespace SQLWorker.Web.Controllers
                     dir = Request.Form["dir"];
                 DirectoryInfo di = new DirectoryInfo(dir);
                 
-                //Log.Information($"[{Thread.CurrentThread.Name}][{DateTime.Now}][Information][Пользователь {Request.HttpContext.User.Identity.Name.ToLower()} запросил данные по {dir}]");
                 Response.WriteAsync("<ul class=\"jqueryFileTree\" style=\"display: none;\">\n");
                 foreach (DirectoryInfo di_child in di.GetDirectories().Where(e => !e.Name.StartsWith('.')))
                 {

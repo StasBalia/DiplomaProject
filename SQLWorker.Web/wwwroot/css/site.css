@@ -59,14 +59,15 @@ body {
 table {
   table-layout:fixed;
   margin:auto;
+  border-collapse: collapse;
 }
 th, td {
-  padding:5px 10px;
-  word-wrap:break-word;
+  text-align: center;
+  border: 1px solid #dddddd;
 }
 thead {
   display:table;
-  width:99%;
+  width:100%;
   height:3vh;
 }
 tbody {
