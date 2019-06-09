@@ -5,6 +5,7 @@ using Moq;
 using Serilog;
 using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
+using SQLWorker.UnitTests.DAL.Utilities;
 using Xunit;
 
 namespace SQLWorker.UnitTests.DAL
@@ -12,16 +13,15 @@ namespace SQLWorker.UnitTests.DAL
     public class ScriptRepositoryTests
     {
         private readonly IScriptRepository _repository;
-        private const string DB_CONNECTION_STRING =
-            "User ID=postgres;Password=password;Server=localhost;Port=5432;Database=test";
         public ScriptRepositoryTests()
         {
             ILoggerFactory factory = new LoggerFactory();
-            _repository = new PostgreSqlScriptRepository(DB_CONNECTION_STRING, factory.CreateLogger<PostgreSqlScriptRepository>());
+            _repository = new PostgreSqlScriptRepository(ConnectionStringProvider.DB_CONNECTION_STRING, factory.CreateLogger<PostgreSqlScriptRepository>());
             //_scriptWorker = new ScriptWorker(factory.CreateLogger<ScriptWorker>());
         }
 
         [Fact]
+        [UseDatabase(ConnectionStringProvider.DB_CONNECTION_STRING)]
         public void ExecuteScript_Valid()
         {
             var res = _repository.ExecuteAndGetResult("SELECT * FROM public.usertable WHERE id = 1");

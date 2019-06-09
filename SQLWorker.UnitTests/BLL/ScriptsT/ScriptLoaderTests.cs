@@ -21,7 +21,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
         public async Task LoadScriptFromFolder_ReturnOk()
         {
             await _loader.LoadScriptsAsync(@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\");//TODO: remove explicit path !!!!
-            ScriptSources.GetAll().Count().Should().Be(6);
+            ScriptSources.GetAll().Count().Should().Be(8);
             ScriptSources.RemoveAll();
         }
 
@@ -29,7 +29,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
         public async Task GetFileFromGithubDirectory_ReturnOneFile()
         {
             var result = await _loader.GetFilesFromDirectoryAsync(@"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\", "*.sql", SearchOption.AllDirectories);//TODO: remove explicit path !!!!
-            result.Length.Should().Be(6);
+            result.Length.Should().Be(8);
             ScriptSources.RemoveAll();
         }
 

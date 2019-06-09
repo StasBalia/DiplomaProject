@@ -13,6 +13,7 @@ using SQLWorker.BLL.Models.Enums;
 using SQLWorker.BLL.ScriptUtilities;
 using SQLWorker.DAL.Repositories.Implementations;
 using SQLWorker.DAL.Repositories.Interfaces;
+using SQLWorker.UnitTests.DAL.Utilities;
 using Xunit;
 
 namespace SQLWorker.UnitTests.BLL.ScriptsT
@@ -36,6 +37,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
         }
 
         [Fact]
+        [UseDatabase(ConnectionStringProvider.DB_CONNECTION_STRING)]
         public async Task AlwaysValidTest()
         {
             TaskModel task = new TaskModel();
