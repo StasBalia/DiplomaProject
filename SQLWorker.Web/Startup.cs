@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -69,7 +71,11 @@ namespace SQLWorker.Web
                 .MinimumLevel.Override("System", LogEventLevel.Error)
                 .WriteTo.Console()
                 .WriteTo.RollingFile("Logs\\{Date}_log.txt")
-                .CreateLogger(); 
+                .CreateLogger();
+           
+            var creds = Configuration.GetSection("GitHubCredentials").Get<GitHubCredentials>();
+            GithubPuller p = new GithubPuller(creds);
+            p.PullFromRepositories(Directory.GetDirectories(@"..\..\Repos\"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +93,7 @@ namespace SQLWorker.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();

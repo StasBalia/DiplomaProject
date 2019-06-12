@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SQLWorker.BLL.ProvidersRepositories.Github;
 using SQLWorker.Web.Models;
 
 namespace SQLWorker.Web.Controllers
@@ -14,9 +15,11 @@ namespace SQLWorker.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _log;
-        public HomeController(ILogger<HomeController> log)
+        private readonly GithubPuller _puller;
+        public HomeController(ILogger<HomeController> log, GithubPuller puller)
         {
             _log = log;
+            _puller = puller;
         }
         public IActionResult Index()
         {

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
@@ -17,6 +18,12 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
         private const string PATH_TO_REPO = @"..\..\Repos\";
         private readonly ILogger _log;
 
+        public GithubPuller(GitHubCredentials creds)
+        {
+            _userName = creds.UserName;
+            _password = creds.Password;
+            _email = creds.Email;
+        }
         public GithubPuller(ILogger<GithubPuller> log, IOptions<GitHubCredentials> options)
         {
             _log = log;
@@ -64,6 +71,15 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
             {
                 _log.LogError("Can't pull from repository. {@e}",e);
                 return false;
+            }
+        }
+
+        public void PullFromRepositories(string[] repositoriesNames)
+        {
+            var names = repositoriesNames.Select(x => x.Split('\\').LastOrDefault()).ToList();
+            foreach (var name in names)
+            {
+                PullFromRepoAsync(string.Empty, name).Wait();
             }
         }
         private void GitClone(string urlToRepo, string pathToRepo)
