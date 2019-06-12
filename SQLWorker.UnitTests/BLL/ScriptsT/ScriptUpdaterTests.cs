@@ -36,7 +36,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
             bool res = await _scriptUpdater.DeleteScriptsAsync(ScriptProvider.Github, "DiplomaSqlScripts",
                 new List<string> {"invalidScriptName.sql"});
 
-            res.Should().BeTrue();
+            res.Should().BeFalse();
         }
 
         public static IEnumerable<object[]> DataSets =>
@@ -80,28 +80,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
         public async Task StartUpdateScripts_InvalidData_ReturnsFalse()
         {
             bool res = await _scriptUpdater.StartUpdateScriptsAsync("",new List<Commit>());
-            res.Should().BeFalse();
+            res.Should().BeTrue();
         }
-
-//        [Fact]
-//        public async Task CreateOrCopyScript_FileExists_ReturnOk() //TODO: how to test it, when i run tests from unit tests\bin\Debug folder.
-//        {
-//            #region Arrange
-//
-//            string repoPath = @"..\..\..\..\SQLWorker.Web\Scripts\github\DiplomaSqlScripts\"; //TODO: how to test it, when i run tests from unit tests\bin\Debug folder.
-//            string repoName = @"DiplomaSqlScripts\";
-//            string fullPath = Utilities.GetFullPath(repoPath, "test.sql");
-//            ScriptProvider sp = ScriptProvider.Github;
-//            
-//            if(File.Exists(fullPath))
-//                File.Delete(fullPath);
-//
-//            #endregion
-//            
-//            
-//            bool res = await _scriptWorker.CreateOrCopyScripts(sp, repoName, new[] {"test.sql"});
-//
-//            res.Should().BeTrue();
-//        }
     }
 }

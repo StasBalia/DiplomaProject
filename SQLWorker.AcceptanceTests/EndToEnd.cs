@@ -62,7 +62,6 @@ namespace SQLWorker.AcceptanceTests
                         },
                         Distinct = true,
                         Message = "message",
-                        SHA = "sha",
                         Url = "urlik",
                         TimeStamp = DateTime.Now.ToUniversalTime()
                     }

@@ -33,6 +33,10 @@ namespace SQLWorker.BLL.ScriptUtilities
                 if (!IsValidInput(provider, repositoryName, fileNames))
                     return await Task.FromResult(false); 
                 string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
+                
+                if (!Directory.Exists(pathTo))
+                    return await Task.FromResult(false);
+                
                 string pathFrom = Utilities.GetFullPath(PATH_TO_REPO, repositoryName);
                 
                 foreach (var file in fileNames)
@@ -40,15 +44,13 @@ namespace SQLWorker.BLL.ScriptUtilities
                     var fileFrom = Directory.GetFiles(pathFrom, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(file));
                     string content = await File.ReadAllTextAsync(fileFrom);
                     string fileTo = Path.Combine(pathTo, file);
+                  
                     if (File.Exists(fileTo))
-                        await File.AppendAllTextAsync(fileTo, content);
+                        await File.WriteAllTextAsync(fileTo, content);
                     else
                     {
                         Directory.CreateDirectory(pathTo);
-                        using (var wr = File.Create(fileTo))
-                        {
-                            await wr.WriteAsync(Encoding.UTF8.GetBytes(content));
-                        }
+                        await File.WriteAllTextAsync(fileTo, content);
                     }
                 }
             
@@ -70,11 +72,14 @@ namespace SQLWorker.BLL.ScriptUtilities
                 
                 string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
                 
+                if (!Directory.Exists(pathTo))
+                    return await Task.FromResult(false);
+                
                 foreach (var file in fileNames)
                 {
                     try
                     {
-                        string fileTo = Directory.GetFiles(pathTo, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(file));
+                        string fileTo = GetFullFilePath(file, pathTo);
                         File.Delete(fileTo);
                     }
                     catch (Exception e)
@@ -91,6 +96,7 @@ namespace SQLWorker.BLL.ScriptUtilities
                 return await Task.FromResult(false);
             }
         }
+        private string GetFullFilePath(string fileName, string pathTo) => Directory.GetFiles(pathTo, fileName, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(fileName));
 
         public bool IsValidInput(ScriptProvider provider, string repositoryName, List<string> fileNames)
         {
@@ -98,7 +104,7 @@ namespace SQLWorker.BLL.ScriptUtilities
                 return false;
             if (string.IsNullOrEmpty(repositoryName))
             {
-                _log.LogWarning("Repository name is null.", repositoryName);
+                _log.LogWarning("File doesn't exists.", repositoryName);
                 return false;
             }
 
@@ -114,9 +120,14 @@ namespace SQLWorker.BLL.ScriptUtilities
             try
             {
                 Commit commit = commits.OrderByDescending(x => x.TimeStamp).FirstOrDefault();
-                return await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Added) &&
-                       await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Modified) &&
-                       await DeleteScriptsAsync(ScriptProvider.Github, repositoryName, commit?.Removed);
+                bool res1 = true, res2 = true, res3 = true;
+                if (commit?.Added.Count > 0)
+                    res1 = await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit.Added);
+                if (commit?.Modified.Count > 0)
+                    res2 = await CreateOrCopyScriptsAsync(ScriptProvider.Github, repositoryName, commit.Modified);
+                if (commit?.Removed.Count > 0)
+                    res3 = await DeleteScriptsAsync(ScriptProvider.Github, repositoryName, commit.Removed);
+                return await Task.FromResult(res1 == res2 == res3);
             }
             catch (Exception e)
             {

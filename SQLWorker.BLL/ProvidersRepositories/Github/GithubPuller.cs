@@ -10,7 +10,7 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
 {
     public class GithubPuller
     {
-        private const string USERNAME = "";
+        private const string USERNAME = "StasBalia";
         private const string PASSWORD = "";
         private const string EMAIL = "balya.stanislav@gmail.com";
         private const string PATH_TO_REPO = @"..\..\Repos\";

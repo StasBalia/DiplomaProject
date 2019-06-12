@@ -6,8 +6,8 @@ namespace SQLWorker.Web.Models.Request.Github
 {
     public class CommitDTO
     {
-        public string SHA { get; set; }
         public string Message { get; set; }
+        [JsonProperty("author")]
         public AuthorDTO AuthorDto { get; set; }
         public string Url { get; set; }
         public bool Distinct { get; set; }

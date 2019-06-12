@@ -6,7 +6,6 @@ namespace SQLWorker.BLL.Models
 {
     public class Commit
     {
-        public string SHA { get; set; }
         public string Message { get; set; }
         public Author Author { get; set; }
         public string Url { get; set; }

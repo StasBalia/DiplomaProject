@@ -60,7 +60,6 @@ namespace SQLWorker.Web.Controllers
                     Distinct = commit.Distinct,
                     Modified = commit.Modified,
                     TimeStamp = commit.TimeStamp,
-                    SHA = commit.SHA
                 });
             }
             
