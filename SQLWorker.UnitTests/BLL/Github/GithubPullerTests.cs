@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SQLWorker.BLL;
 using SQLWorker.BLL.ProvidersRepositories.Github;
 using Xunit;
 
@@ -11,7 +13,7 @@ namespace SQLWorker.UnitTests.BLL.Github
 
         public GithubPullerTests()
         {
-            _puller = new GithubPuller(new LoggerFactory().CreateLogger<GithubPuller>());
+            _puller = new GithubPuller(new LoggerFactory().CreateLogger<GithubPuller>(), new OptionsWrapper<GitHubCredentials>(new GitHubCredentials()));
         }
 
         [Fact]

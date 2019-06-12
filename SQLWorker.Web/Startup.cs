@@ -45,6 +45,8 @@ namespace SQLWorker.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.Configure<DatabaseSettings>(options => Configuration.GetSection("DatabaseSettings").Bind(options));
+            services.Configure<GitHubCredentials>(
+                options => Configuration.GetSection("GitHubCredentials").Bind(options));
             services.AddLogging(x => x.AddSerilog(dispose: true));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<IScriptRepository, PostgreSqlScriptRepository>(); //TODO: pass connstr to implementation
@@ -86,7 +88,6 @@ namespace SQLWorker.Web
                 app.UseHsts();
             }
 
-           // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();

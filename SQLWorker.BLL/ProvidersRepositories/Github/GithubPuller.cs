@@ -4,46 +4,59 @@ using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SQLWorker.BLL.ScriptUtilities;
 
 namespace SQLWorker.BLL.ProvidersRepositories.Github
 {
     public class GithubPuller
     {
-        private const string USERNAME = "StasBalia";
-        private const string PASSWORD = "";
-        private const string EMAIL = "balya.stanislav@gmail.com";
+        private readonly string _userName;
+        private readonly string _password;
+        private readonly string _email;
         private const string PATH_TO_REPO = @"..\..\Repos\";
         private readonly ILogger _log;
 
-        public GithubPuller(ILogger<GithubPuller> log)
+        public GithubPuller(ILogger<GithubPuller> log, IOptions<GitHubCredentials> options)
         {
             _log = log;
+            _userName = options.Value.UserName;
+            _password = options.Value.Password;
+            _email = options.Value.Email;
         }
         
-        public async Task<bool> PullFromRepoAsync(string repositoryName)
+        public async Task<bool> PullFromRepoAsync(string urlToRepo, string repositoryName)
         {
             try
             {
-                Task pull = Task.Factory.StartNew(() => { using (var repo = new Repository(Utilities.GetFullPath(PATH_TO_REPO, repositoryName)))
+                Task pull = Task.Factory.StartNew(() =>
                 {
-                    // Credential information to fetch
-                    PullOptions options = new PullOptions
+                    string pathToRepo = Utilities.GetFullPath(PATH_TO_REPO, repositoryName);
+                    if(!Directory.Exists(pathToRepo))
+                        GitClone(urlToRepo, pathToRepo);
+                    else
                     {
-                        FetchOptions = new FetchOptions
+                        using (var repo = new Repository(pathToRepo))
                         {
-                            CredentialsProvider = (url, usernameFromUrl, types) =>
-                                new UsernamePasswordCredentials {Username = USERNAME, Password = PASSWORD}
-                        }
-                    };
+                            // Credential information to fetch
+                            PullOptions options = new PullOptions
+                            {
+                                FetchOptions = new FetchOptions
+                                {
+                                    CredentialsProvider = (url, usernameFromUrl, types) =>
+                                        new UsernamePasswordCredentials {Username = _userName, Password = _password}
+                                }
+                            };
 
-                    // User information to create a merge commit
-                    var signature = new Signature(
-                        new Identity(USERNAME, EMAIL), DateTimeOffset.Now);
+                            // User information to create a merge commit
+                            var signature = new Signature(
+                                new Identity(_userName, _email), DateTimeOffset.Now);
 
-                    // Pull
-                    Commands.Pull(repo, signature, options);
-                }});
+                            // Pull
+                            Commands.Pull(repo, signature, options);
+                        }    
+                    }
+                });
                 await pull;
                 return true;
             }
@@ -52,6 +65,15 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
                 _log.LogError("Can't pull from repository. {@e}",e);
                 return false;
             }
+        }
+        private void GitClone(string urlToRepo, string pathToRepo)
+        {
+            Directory.CreateDirectory(pathToRepo);
+            Credentials s = new UsernamePasswordCredentials
+            {
+                Username = _userName, Password = _password
+            };
+            Repository.Clone(urlToRepo, pathToRepo, new CloneOptions{ CredentialsProvider = (url, user, cred) => s});
         }
     }
 }

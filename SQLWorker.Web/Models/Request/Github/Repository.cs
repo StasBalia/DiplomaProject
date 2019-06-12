@@ -6,6 +6,9 @@ namespace SQLWorker.Web.Models.Request.Github
     {
         public string Name { get; set; }
         [JsonProperty("full_name")]
-        public string FullName { get; set; }    
+        public string FullName { get; set; }
+        
+        [JsonProperty("html_url")]
+        public string HtmlUrl { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace SQLWorker.Web.Controllers
         {
             string repoName = pushEvent.Repository.Name + "\\";
             _log.LogInformation("JSON from webhook: {obj}", pushEvent);
-            bool isPulled = await _puller.PullFromRepoAsync(repoName);
+            bool isPulled = await _puller.PullFromRepoAsync(pushEvent.Repository.HtmlUrl, repoName);
             
             if(isPulled)
                 _log.LogInformation("Pull — done!");
