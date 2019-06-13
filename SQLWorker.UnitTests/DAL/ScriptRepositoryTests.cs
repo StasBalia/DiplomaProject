@@ -25,7 +25,7 @@ namespace SQLWorker.UnitTests.DAL
         [UseDatabase(ConnectionStringProvider.DB_CONNECTION_STRING)]
         public void ExecuteScript_Valid()
         {
-            Thread.Sleep(1500);
+            
             var res = _repository.ExecuteAndGetResult("SELECT * FROM public.usertable WHERE id = 1");
 
             res.Start.Should().NotBe(default(DateTime));

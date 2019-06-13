@@ -38,10 +38,10 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
 
         [Fact]
         [UseDatabase(ConnectionStringProvider.DB_CONNECTION_STRING)]
-        public async Task AlwaysValidTest()
+        public void  AlwaysValidTest()
         {
             TaskModel task = new TaskModel();
-            var result = await _scriptWorker.ExecuteScriptAsync(new LaunchInfo
+            var result =  _scriptWorker.ExecuteScriptAsync(new LaunchInfo
             {
                 PathToScriptFile = @"E:\University\Diploma\DiplomaProject\SQLWorker.Web\Scripts\github\testScript.sql",
                 ParamInfos = new List<ParamInfo>
@@ -49,11 +49,11 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
                     new ParamInfo
                     {
                         Name = "{id}",
-                        Value = "1"
+                        Value = "8"
                     }
                 },
                 FileType = "csv"
-            }, task);
+            }, task).Result;
             result.Should().NotBeNull();
             task.StartTime.Should().NotBe(default(DateTime));
             task.EndTime.Should().NotBe(default(DateTime));

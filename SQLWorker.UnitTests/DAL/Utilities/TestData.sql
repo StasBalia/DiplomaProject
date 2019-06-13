@@ -24,7 +24,7 @@ INSERT INTO public.usertable (id, username, email) VALUES (2, 'ne', 'a@gmail.com
 create table if not exists users
 (
 	id bigserial not null
-		constraint users_pk
+		constraint users_pk1
 			primary key,
 	email varchar(50) not null,
 	name varchar(25) not null,

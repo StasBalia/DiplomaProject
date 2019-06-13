@@ -48,9 +48,9 @@ namespace SQLWorker.BLL
             _log.LogInformation("Start executing script.");
             try
             {
-                var scriptFile = File.ReadAllLines(launchInfo.PathToScriptFile);
+                var scriptFile = File.ReadAllText(launchInfo.PathToScriptFile);
 
-                string script = string.Join("", scriptFile);
+                string script = scriptFile;
                 foreach (var paramInfo in launchInfo.ParamInfos)
                 {
                     script = script.Replace(paramInfo.Name, paramInfo.Value);
