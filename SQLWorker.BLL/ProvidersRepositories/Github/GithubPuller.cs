@@ -16,10 +16,12 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
         private readonly string _password;
         private readonly string _email;
         private const string PATH_TO_REPO = @"..\..\Repos\";
+        private const string PATH_TO_SAVE = @"..\SQLWorker.Web\Scripts\github\";
         private readonly ILogger _log;
 
-        public GithubPuller(GitHubCredentials creds)
+        public GithubPuller(ILogger<GithubPuller> log,GitHubCredentials creds)
         {
+            _log = log;
             _userName = creds.UserName;
             _password = creds.Password;
             _email = creds.Email;
@@ -80,7 +82,20 @@ namespace SQLWorker.BLL.ProvidersRepositories.Github
             foreach (var name in names)
             {
                 PullFromRepoAsync(string.Empty, name).Wait();
+                foreach (var directory in Directory.GetDirectories(Path.Combine(PATH_TO_REPO, name), "*", SearchOption.AllDirectories).Where(x => !x.Contains(".git")))
+                {
+                    var directoryName = directory.Replace(@"..\..\Repos\", @"..\SQLWorker.Web\Scripts\github\");//Split("\\").LastOrDefault();
+
+                    Directory.CreateDirectory(directoryName);
+                }
+                foreach (var file in Directory.GetFiles(Path.Combine(PATH_TO_REPO, name),"*.sql", SearchOption.AllDirectories))
+                {
+                    var fileName = file;//.Split("\\").LastOrDefault();
+                    fileName = file.Replace(@"..\..\Repos\", @"..\SQLWorker.Web\Scripts\github\");
+                    File.Copy(file, fileName, true);
+                }
             }
+            
         }
         private void GitClone(string urlToRepo, string pathToRepo)
         {

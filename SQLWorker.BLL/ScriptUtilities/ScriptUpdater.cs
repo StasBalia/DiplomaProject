@@ -33,17 +33,16 @@ namespace SQLWorker.BLL.ScriptUtilities
                 if (!IsValidInput(provider, repositoryName, fileNames))
                     return await Task.FromResult(false); 
                 string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
-                
-                if (!Directory.Exists(pathTo))
-                    return await Task.FromResult(false);
+               
                 
                 string pathFrom = Utilities.GetFullPath(PATH_TO_REPO, repositoryName);
                 
                 foreach (var file in fileNames)
                 {
-                    var fileFrom = Directory.GetFiles(pathFrom, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(file));
+                    var fileName = file.Split('/').LastOrDefault();
+                    var fileFrom = Directory.GetFiles(pathFrom, file, SearchOption.AllDirectories).FirstOrDefault(x => x.Contains(fileName));
                     string content = await File.ReadAllTextAsync(fileFrom);
-                    string fileTo = Path.Combine(pathTo, file);
+                    string fileTo = Path.Combine(pathTo, file).Replace('/','\\');
                   
                     if (File.Exists(fileTo))
                         await File.WriteAllTextAsync(fileTo, content);
@@ -72,14 +71,13 @@ namespace SQLWorker.BLL.ScriptUtilities
                 
                 string pathTo = Utilities.GetFullPath(PATH_TO_SAVE,  $@"{provider.ToString().ToLower()}\" + repositoryName);
                 
-                if (!Directory.Exists(pathTo))
-                    return await Task.FromResult(false);
                 
                 foreach (var file in fileNames)
                 {
                     try
                     {
-                        string fileTo = GetFullFilePath(file, pathTo);
+                        var fileName = file.Replace('/', '\\');
+                        string fileTo = GetFullFilePath(fileName, pathTo);
                         File.Delete(fileTo);
                     }
                     catch (Exception e)

@@ -15,11 +15,9 @@ namespace SQLWorker.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _log;
-        private readonly GithubPuller _puller;
-        public HomeController(ILogger<HomeController> log, GithubPuller puller)
+        public HomeController(ILogger<HomeController> log)
         {
             _log = log;
-            _puller = puller;
         }
         public IActionResult Index()
         {

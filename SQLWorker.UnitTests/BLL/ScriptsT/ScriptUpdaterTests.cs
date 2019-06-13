@@ -36,7 +36,7 @@ namespace SQLWorker.UnitTests.BLL.ScriptsT
             bool res = await _scriptUpdater.DeleteScriptsAsync(ScriptProvider.Github, "DiplomaSqlScripts",
                 new List<string> {"invalidScriptName.sql"});
 
-            res.Should().BeFalse();
+            res.Should().BeTrue();
         }
 
         public static IEnumerable<object[]> DataSets =>

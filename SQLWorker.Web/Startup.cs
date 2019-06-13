@@ -74,7 +74,7 @@ namespace SQLWorker.Web
                 .CreateLogger();
            
             var creds = Configuration.GetSection("GitHubCredentials").Get<GitHubCredentials>();
-            GithubPuller p = new GithubPuller(creds);
+            GithubPuller p = new GithubPuller(new LoggerFactory().CreateLogger<GithubPuller>(),creds );
             p.PullFromRepositories(Directory.GetDirectories(@"..\..\Repos\"));
         }
 
