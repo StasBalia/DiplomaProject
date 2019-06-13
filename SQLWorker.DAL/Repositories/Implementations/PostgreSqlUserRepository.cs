@@ -31,7 +31,7 @@ namespace SQLWorker.DAL.Repositories.Implementations
             {
                 using (var connection = new NpgsqlConnection(_connectionString))
                 {
-                    return await connection.ExecuteScalarAsync<long>(@"INSERT INTO users (name, email, password) VALUES (@name, @email, @password) RETURNING id;", new
+                    return await connection.ExecuteScalarAsync<long>(@"INSERT INTO tuser (name, email, password) VALUES (@name, @email, @password) RETURNING id;", new
                     {
                         name = userData.Name,
                         email = userData.Email,
@@ -52,7 +52,7 @@ namespace SQLWorker.DAL.Repositories.Implementations
             {
                 using (var connection = new NpgsqlConnection(_connectionString))
                 {
-                    return await connection.QueryFirstAsync<User>(@"SELECT * FROM users WHERE email = @email", new
+                    return await connection.QueryFirstAsync<User>(@"SELECT * FROM tuser WHERE email = @email", new
                     {
                         email
                     });
